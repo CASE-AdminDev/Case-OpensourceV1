@@ -1,5 +1,7 @@
 {
-  "buildCommand": "npm run build",
+  "installCommand": "echo skip",
+  "buildCommand": "node scripts/generate-env.js",
+  "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
