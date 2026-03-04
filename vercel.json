@@ -10,6 +10,11 @@
     { "source": "/auth", "destination": "/public/auth.html" },
     { "source": "/login", "destination": "/public/auth.html" },
     { "source": "/signup", "destination": "/public/auth.html" },
+    { "source": "/about", "destination": "/public/about.html" },
+    { "source": "/blog", "destination": "/public/blog.html" },
+    { "source": "/careers", "destination": "/public/careers.html" },
+    { "source": "/privacy", "destination": "/public/privacy.html" },
+    { "source": "/terms", "destination": "/public/terms.html" },
     { "source": "/@:username", "destination": "/public/profile.html?u=:username" }
   ],
   "headers": [
