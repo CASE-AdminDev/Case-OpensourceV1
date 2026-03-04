@@ -17,6 +17,9 @@
         heroContent: document.getElementById('heroContent'),
         heroMockup: document.getElementById('heroMockup'),
         deployBarFill: document.getElementById('deployBarFill'),
+        mobileMenuBtn: document.getElementById('mobileMenuBtn'),
+        navLinks: document.getElementById('navLinks'),
+        scrollIndicator: document.getElementById('scrollIndicator'),
     };
 
     // ─── Particle System ───
@@ -162,8 +165,76 @@
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
+                // Close mobile menu on nav click
+                if (DOM.mobileMenuBtn && DOM.navLinks) {
+                    DOM.mobileMenuBtn.classList.remove('active');
+                    DOM.navLinks.classList.remove('open');
+                }
             });
         });
+    }
+
+    // ─── Mobile Menu Toggle ───
+    function initMobileMenu() {
+        if (!DOM.mobileMenuBtn || !DOM.navLinks) return;
+        DOM.mobileMenuBtn.addEventListener('click', () => {
+            DOM.mobileMenuBtn.classList.toggle('active');
+            DOM.navLinks.classList.toggle('open');
+        });
+    }
+
+    // ─── Stats Counter Animation ───
+    function initStatsCounter() {
+        const statNumbers = document.querySelectorAll('.stat-number[data-target]');
+        if (!statNumbers.length) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        const target = parseInt(el.dataset.target, 10);
+                        animateCounter(el, target);
+                        observer.unobserve(el);
+                    }
+                });
+            },
+            { threshold: 0.5 }
+        );
+
+        statNumbers.forEach((el) => observer.observe(el));
+    }
+
+    function animateCounter(el, target) {
+        const duration = 1800;
+        const start = performance.now();
+        function update(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            // ease-out curve
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.floor(eased * target);
+            if (progress < 1) {
+                requestAnimationFrame(update);
+            } else {
+                el.textContent = target;
+            }
+        }
+        requestAnimationFrame(update);
+    }
+
+    // ─── Scroll Indicator Hide ───
+    function initScrollIndicator() {
+        if (!DOM.scrollIndicator) return;
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                DOM.scrollIndicator.style.opacity = '0';
+                DOM.scrollIndicator.style.pointerEvents = 'none';
+            } else {
+                DOM.scrollIndicator.style.opacity = '0.6';
+                DOM.scrollIndicator.style.pointerEvents = 'auto';
+            }
+        }, { passive: true });
     }
 
     // ─── Entry Animation Sequence ───
@@ -224,6 +295,9 @@
         initScrollReveal();
         initNavbarScroll();
         initSmoothScroll();
+        initMobileMenu();
+        initStatsCounter();
+        initScrollIndicator();
     }
 
     // Wait for DOM
