@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — CASE</title>
+  <meta name="description" content="Sign in or create your CASE account to build and share your portfolio." />
+  <meta name="theme-color" content="#0F172A" />
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%233B82F6'/><text x='50' y='72' font-size='60' font-weight='bold' fill='white' text-anchor='middle' font-family='sans-serif'>C</text></svg>" />
+
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  </noscript>
+
+  <link rel="stylesheet" href="css/shared.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+
+<body>
+  <div class="auth">
+
+    <!-- Background glow -->
+    <div class="auth__glow"></div>
+
+    <div class="auth__content">
+
+      <!-- Logo -->
+      <a href="/" class="auth__logo">C<span class="logo-a">A</span>SE</a>
+
+      <!-- ═══════════════ LOGIN FORM ═══════════════ -->
+      <div class="auth__card" id="loginCard">
+        <h1 class="auth__title">Welcome back</h1>
+        <p class="auth__subtitle">Sign in to your CASE account</p>
+
+        <form id="loginForm" autocomplete="on" novalidate>
+          <div class="auth__field">
+            <label class="auth__label" for="loginEmail">Email</label>
+            <input class="auth__input" type="email" id="loginEmail" placeholder="you@example.com"
+              autocomplete="email" required />
+          </div>
+
+          <div class="auth__field">
+            <label class="auth__label" for="loginPassword">Password</label>
+            <input class="auth__input" type="password" id="loginPassword" placeholder="••••••••"
+              autocomplete="current-password" required minlength="6" />
+          </div>
+
+          <div class="auth__error" id="loginError"></div>
+
+          <button class="auth__btn" type="submit" id="loginBtn">
+            Sign In
+            <span class="auth__btn-arrow">→</span>
+          </button>
+
+          <button type="button" class="auth__link-btn" id="forgotBtn">
+            Forgot password?
+          </button>
+        </form>
+
+        <div class="auth__divider">
+          <span>Don't have an account?</span>
+        </div>
+
+        <button class="auth__btn auth__btn--secondary" id="showSignupBtn">
+          Create Account
+        </button>
+      </div>
+
+      <!-- ═══════════════ SIGNUP FORM ═══════════════ -->
+      <div class="auth__card auth__card--hidden" id="signupCard">
+        <h1 class="auth__title">Create your CASE</h1>
+        <p class="auth__subtitle">Build and share your portfolio in minutes</p>
+
+        <form id="signupForm" autocomplete="on" novalidate>
+          <div class="auth__field">
+            <label class="auth__label" for="signupName">Full Name</label>
+            <input class="auth__input" type="text" id="signupName" placeholder="Alex Morgan" autocomplete="name"
+              required />
+          </div>
+
+          <div class="auth__field">
+            <label class="auth__label" for="signupUsername">Username</label>
+            <div class="auth__input-wrap">
+              <span class="auth__input-prefix">@</span>
+              <input class="auth__input auth__input--prefix" type="text" id="signupUsername"
+                placeholder="alexmorgan" autocomplete="username" required pattern="[a-z0-9_]{3,20}" />
+            </div>
+            <div class="auth__hint" id="usernameHint">3-20 characters: lowercase, numbers, underscores</div>
+          </div>
+
+          <div class="auth__field">
+            <label class="auth__label" for="signupEmail">Email</label>
+            <input class="auth__input" type="email" id="signupEmail" placeholder="you@example.com"
+              autocomplete="email" required />
+          </div>
+
+          <div class="auth__field">
+            <label class="auth__label" for="signupPassword">Password</label>
+            <input class="auth__input" type="password" id="signupPassword" placeholder="Min. 6 characters"
+              autocomplete="new-password" required minlength="6" />
+          </div>
+
+          <div class="auth__error" id="signupError"></div>
+
+          <button class="auth__btn" type="submit" id="signupBtn">
+            Create Account
+            <span class="auth__btn-arrow">→</span>
+          </button>
+        </form>
+
+        <div class="auth__divider">
+          <span>Already have an account?</span>
+        </div>
+
+        <button class="auth__btn auth__btn--secondary" id="showLoginBtn">
+          Sign In
+        </button>
+      </div>
+
+      <!-- ═══════════════ RESET PASSWORD ═══════════════ -->
+      <div class="auth__card auth__card--hidden" id="resetCard">
+        <h1 class="auth__title">Reset password</h1>
+        <p class="auth__subtitle">Enter your email and we'll send a reset link</p>
+
+        <form id="resetForm" autocomplete="on" novalidate>
+          <div class="auth__field">
+            <label class="auth__label" for="resetEmail">Email</label>
+            <input class="auth__input" type="email" id="resetEmail" placeholder="you@example.com"
+              autocomplete="email" required />
+          </div>
+
+          <div class="auth__error" id="resetError"></div>
+          <div class="auth__success" id="resetSuccess"></div>
+
+          <button class="auth__btn" type="submit" id="resetBtn">
+            Send Reset Link
+            <span class="auth__btn-arrow">→</span>
+          </button>
+        </form>
+
+        <div class="auth__divider">
+          <span>Remember your password?</span>
+        </div>
+
+        <button class="auth__btn auth__btn--secondary" id="backToLoginBtn">
+          Back to Sign In
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Firebase SDK (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+  <script src="js/firebase-env.js"></script>
+  <script src="js/firebase-config.js" defer></script>
+  <script src="js/data-service.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/auth-page.js" defer></script>
+</body>
+
+</html>

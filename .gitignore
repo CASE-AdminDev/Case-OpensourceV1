@@ -1,0 +1,38 @@
+# ═══════════════════════════════════════
+# CASE — .gitignore
+# ═══════════════════════════════════════
+
+# ── Environment / Secrets ──
+public/js/firebase-env.js
+.env
+.env.*
+*.env
+!.env.example
+
+# ── Dependencies ──
+node_modules/
+
+# ── Build ──
+dist/
+build/
+.vercel/
+
+# ── Editor / OS ──
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Logs ──
+*.log
+npm-debug.log*
+
+# ── Firebase ──
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log

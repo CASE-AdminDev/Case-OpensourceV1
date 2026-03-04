@@ -1,6 +1,15 @@
 {
+  "buildCommand": "npm run build",
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    { "source": "/explore", "destination": "/public/explore.html" },
+    { "source": "/dashboard", "destination": "/public/dashboard.html" },
+    { "source": "/auth", "destination": "/public/auth.html" },
+    { "source": "/login", "destination": "/public/auth.html" },
+    { "source": "/signup", "destination": "/public/auth.html" },
+    { "source": "/@:username", "destination": "/public/profile.html?u=:username" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -43,6 +52,24 @@
     },
     {
       "source": "/public/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/css/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/js/(.*)",
       "headers": [
         {
           "key": "Cache-Control",

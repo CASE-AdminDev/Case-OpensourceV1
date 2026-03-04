@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — CASE</title>
+  <meta name="description" content="View this student's portfolio on CASE." />
+  <meta name="theme-color" content="#0F172A" />
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%233B82F6'/><text x='50' y='72' font-size='60' font-weight='bold' fill='white' text-anchor='middle' font-family='sans-serif'>C</text></svg>" />
+
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  </noscript>
+
+  <link rel="stylesheet" href="css/shared.css" />
+  <link rel="stylesheet" href="css/profile.css" />
+</head>
+
+<body>
+
+  <!-- ═══════════════ TOP BAR ═══════════════ -->
+  <div class="topbar">
+    <a href="/" class="topbar__logo">C<span class="logo-a">A</span>SE</a>
+    <a href="/public/auth.html" class="topbar__cta">Create yours →</a>
+  </div>
+
+  <!-- ═══════════════ PROFILE CONTENT ═══════════════ -->
+  <div class="profile" id="profileContainer">
+
+    <!-- Loading State -->
+    <div class="not-found" id="loadingState">
+      <div class="spinner" style="width:32px;height:32px;border-width:3px;"></div>
+      <div class="not-found__text">Loading profile...</div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ NOT FOUND (hidden by default) ═══════════════ -->
+  <template id="notFoundTemplate">
+    <div class="not-found">
+      <div class="not-found__code">404</div>
+      <div class="not-found__text">Profile not found</div>
+      <a href="/public/explore.html" class="btn btn--primary" style="margin-top:16px">Try Another Code</a>
+    </div>
+  </template>
+
+  <!-- ═══════════════ PROFILE TEMPLATE ═══════════════ -->
+  <template id="profileTemplate">
+    <div class="profile-content">
+
+      <!-- Header -->
+      <div class="profile-header" id="profileHeader">
+        <div class="profile-header__photo" id="profilePhoto"></div>
+        <h1 class="profile-header__name" id="profileName"></h1>
+        <div class="profile-header__username" id="profileUsername"></div>
+        <div class="profile-header__role" id="profileRole"></div>
+        <p class="profile-header__bio" id="profileBio"></p>
+        <div class="profile-header__social" id="profileSocial"></div>
+      </div>
+
+      <!-- Projects -->
+      <div class="profile-section" id="projectsSection">
+        <h2 class="profile-section__title">Projects</h2>
+        <div class="pub-projects-grid" id="projectsGrid"></div>
+      </div>
+
+      <!-- Certificates -->
+      <div class="profile-section" id="certsSection">
+        <h2 class="profile-section__title">Certificates</h2>
+        <div class="pub-certs-grid" id="certsGrid"></div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="profile-footer">
+        <p class="profile-footer__text">
+          Built with <span class="profile-footer__brand">C A S E</span> · <a href="/">case.app</a>
+        </p>
+        <p class="profile-footer__text" style="font-size:12px;margin-top:4px">Code. Access. Share. Everywhere.</p>
+      </footer>
+
+    </div>
+  </template>
+
+  <!-- Firebase SDK (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+  <script src="js/firebase-env.js"></script>
+  <script src="js/firebase-config.js" defer></script>
+  <script src="js/data-service.js" defer></script>
+  <script src="js/utils.js" defer></script>
+  <script src="js/profile.js" defer></script>
+</body>
+
+</html>

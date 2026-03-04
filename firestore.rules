@@ -1,0 +1,99 @@
+rules_version = '2';
+
+// ═══════════════════════════════════════════════════
+// CASE — Firestore Security Rules
+// Deploy with: firebase deploy --only firestore:rules
+// ═══════════════════════════════════════════════════
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── Helper functions ───
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isAuth() && request.auth.uid == uid;
+    }
+
+    // ═══════════════════════════════════════
+    //  USERS COLLECTION
+    //  users/{uid}
+    // ═══════════════════════════════════════
+    match /users/{uid} {
+      // Anyone can read public profiles
+      allow read: if true;
+
+      // Only the authenticated owner can create/update their own doc
+      allow create: if isOwner(uid);
+      allow update: if isOwner(uid);
+
+      // Users cannot delete their own document (admin only)
+      allow delete: if false;
+
+      // ── Projects subcollection ──
+      // users/{uid}/projects/{projectId}
+      match /projects/{projectId} {
+        // Anyone can read (public profile)
+        allow read: if true;
+
+        // Only the owner can create, update, delete
+        allow create: if isOwner(uid);
+        allow update: if isOwner(uid);
+        allow delete: if isOwner(uid);
+      }
+
+      // ── Certificates subcollection ──
+      // users/{uid}/certificates/{certId}
+      match /certificates/{certId} {
+        // Anyone can read (public profile)
+        allow read: if true;
+
+        // Only the owner can create, update, delete
+        allow create: if isOwner(uid);
+        allow update: if isOwner(uid);
+        allow delete: if isOwner(uid);
+      }
+    }
+
+    // ═══════════════════════════════════════
+    //  CASE CODES LOOKUP
+    //  caseCodes/{CASE-XXXXX} → { uid }
+    // ═══════════════════════════════════════
+    match /caseCodes/{code} {
+      // Anyone can read (needed for explore page lookup)
+      allow read: if true;
+
+      // Only authenticated users can create (during signup)
+      // and only if the uid field matches the auth user
+      allow create: if isAuth() && request.resource.data.uid == request.auth.uid;
+
+      // No updates or deletes
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // ═══════════════════════════════════════
+    //  USERNAMES LOOKUP
+    //  usernames/{username} → { uid }
+    // ═══════════════════════════════════════
+    match /usernames/{username} {
+      // Anyone can read (needed for username availability check)
+      allow read: if true;
+
+      // Only authenticated users can create/update
+      // and only if the uid field matches the auth user
+      allow create: if isAuth() && request.resource.data.uid == request.auth.uid;
+      allow update: if isAuth() && request.resource.data.uid == request.auth.uid;
+
+      // Only the owner can delete (during username change)
+      allow delete: if isAuth() && resource.data.uid == request.auth.uid;
+    }
+
+    // ─── Deny everything else ───
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

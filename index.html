@@ -19,13 +19,21 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%233B82F6'/><text x='50' y='72' font-size='60' font-weight='bold' fill='white' text-anchor='middle' font-family='sans-serif'>C</text></svg>" />
 
   <!-- Fonts -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@600;700;800;900&display=swap"
-    rel="stylesheet" />
+    rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  </noscript>
 
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Prefetch app pages -->
+  <link rel="prefetch" href="/public/auth.html" />
+  <link rel="prefetch" href="/public/explore.html" />
 </head>
 
 <body>
@@ -63,10 +71,11 @@
       <div class="nav-links" id="navLinks">
         <a href="#features" class="nav-link">Features</a>
         <a href="#how-it-works" class="nav-link">How It Works</a>
-        <button class="btn-primary btn-nav" id="navCta">
+        <a href="/public/explore.html" class="nav-link">Explore</a>
+        <a href="/public/auth.html" class="btn-primary btn-nav" id="navCta">
           Get Started
           <span class="btn-arrow">→</span>
-        </button>
+        </a>
       </div>
       <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -95,15 +104,15 @@
           professional live links with HR.
         </p>
         <div class="hero-buttons">
-          <button class="btn-primary btn-lg" id="heroCta">
+          <a href="/public/auth.html" class="btn-primary btn-lg" id="heroCta">
             <span class="btn-shine"></span>
             Create Your CASE
             <span class="btn-arrow">→</span>
-          </button>
-          <button class="btn-secondary btn-lg" id="heroDemo">
+          </a>
+          <a href="/public/explore.html" class="btn-secondary btn-lg" id="heroDemo">
             <span class="btn-play">▶</span>
-            View Demo
-          </button>
+            Explore Profiles
+          </a>
         </div>
         <div class="trust-row">
           <span><i class="trust-check">✓</i> No credit card</span>
@@ -323,11 +332,11 @@
       <div class="cta-content reveal">
         <h2>Ready to Showcase<br /><span class="accent-gradient">Your Work?</span></h2>
         <p class="cta-sub">Join thousands of students already showcasing their work</p>
-        <button class="btn-gradient" id="finalCta">
+        <a href="/public/auth.html" class="btn-gradient" id="finalCta">
           <span class="btn-shine"></span>
           Start Building Your CASE
           <span class="btn-arrow">→</span>
-        </button>
+        </a>
       </div>
       <!-- CTA glow orb -->
       <div class="cta-glow-orb"></div>
@@ -381,7 +390,7 @@
     </div>
   </footer>
 
-  <script src="main.js"></script>
+  <script src="main.js" defer></script>
 </body>
 
 </html>

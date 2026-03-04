@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — CASE</title>
+  <meta name="description" content="Manage your CASE profile, projects, and certificates." />
+  <meta name="theme-color" content="#0F172A" />
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%233B82F6'/><text x='50' y='72' font-size='60' font-weight='bold' fill='white' text-anchor='middle' font-family='sans-serif'>C</text></svg>" />
+
+  <!-- Fonts -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  </noscript>
+
+  <!-- QR Code Library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js" defer></script>
+
+  <link rel="stylesheet" href="css/shared.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+
+<body>
+  <div class="dash">
+
+    <!-- ═══════════════ SIDEBAR ═══════════════ -->
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle menu">☰</button>
+
+    <aside class="sidebar" id="sidebar">
+      <a href="/" class="sidebar__logo">C<span class="logo-a">A</span>SE</a>
+
+      <nav class="sidebar__nav">
+        <button class="sidebar__link active" data-section="overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Overview
+        </button>
+        <button class="sidebar__link" data-section="edit-profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          Edit Profile
+        </button>
+        <button class="sidebar__link" data-section="projects">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+          </svg>
+          Projects
+        </button>
+        <button class="sidebar__link" data-section="certificates">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="8" r="6" />
+            <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+          </svg>
+          Certificates
+        </button>
+        <button class="sidebar__link" data-section="case-code">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <path d="M7 7h.01M7 12h.01M7 17h.01M12 7h.01M12 12h.01M12 17h.01M17 7h.01M17 12h.01M17 17h.01" />
+          </svg>
+          My CASE Code
+        </button>
+      </nav>
+
+      <div class="sidebar__bottom">
+        <div class="sidebar__divider"></div>
+        <button class="sidebar__link sidebar__link--logout" id="logoutBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Log Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- ═══════════════ MAIN CONTENT ═══════════════ -->
+    <main class="main">
+
+      <!-- ── OVERVIEW ── -->
+      <div class="main__section active" id="sec-overview">
+
+        <!-- Welcome Banner -->
+        <div class="welcome" id="welcomeBanner">
+          <div class="welcome__greeting" id="welcomeGreeting">Welcome back 👋</div>
+          <div class="welcome__progress">
+            <span class="welcome__percent" id="welcomePercent">0%</span>
+            <div class="welcome__bar">
+              <div class="welcome__bar-fill" id="welcomeBarFill" style="width: 0%"></div>
+            </div>
+            <span style="color:var(--text-muted);font-size:13px">profile complete</span>
+          </div>
+          <div class="welcome__chips" id="welcomeChips"></div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-card__icon">👁</div>
+            <div class="stat-card__label">Profile Views</div>
+            <div class="stat-card__value" id="statViews">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon">📁</div>
+            <div class="stat-card__label">Projects Added</div>
+            <div class="stat-card__value" id="statProjects">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon">🏅</div>
+            <div class="stat-card__label">Certificates Added</div>
+            <div class="stat-card__value" id="statCerts">0</div>
+          </div>
+        </div>
+
+        <!-- CASE Code Panel -->
+        <div class="code-panel">
+          <div class="code-panel__title">Your CASE Code</div>
+          <div class="code-panel__code-wrap">
+            <div class="code-panel__code" id="overviewCode">---</div>
+            <button class="btn btn--secondary btn--small" id="overviewCopyCode">Copy</button>
+          </div>
+          <div class="code-panel__link">
+            Shareable Link: <a href="#" id="overviewLink" target="_blank">case.app/@username</a>
+            <button class="btn btn--secondary btn--small" id="overviewCopyLink">Copy Link</button>
+          </div>
+          <div class="code-panel__actions">
+            <a class="btn btn--primary btn--small" id="viewProfileBtn" target="_blank">View My Profile →</a>
+            <div class="share-dropdown" id="shareDropdown">
+              <button class="btn btn--secondary btn--small" id="shareToggle">Share via ▾</button>
+              <div class="share-dropdown__menu">
+                <button class="share-dropdown__item" id="shareLink">📋 Copy Link</button>
+                <button class="share-dropdown__item" id="shareWhatsApp">💬 Open WhatsApp</button>
+                <button class="share-dropdown__item" id="shareEmail">✉️ Copy Email Text</button>
+              </div>
+            </div>
+          </div>
+          <div class="code-panel__qr">
+            <div id="overviewQR"></div>
+            <div class="code-panel__qr-label">Scan to view<br>your profile</div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <button class="btn btn--secondary btn--small" data-action="projects">+ Add Project</button>
+          <button class="btn btn--secondary btn--small" data-action="certificates">+ Add Certificate</button>
+          <button class="btn btn--secondary btn--small" data-action="edit-profile">Edit Profile</button>
+        </div>
+      </div>
+
+      <!-- ── EDIT PROFILE ── -->
+      <div class="main__section" id="sec-edit-profile">
+        <h2 class="section-title">Edit Profile</h2>
+
+        <form class="profile-form" id="profileForm" autocomplete="off">
+
+          <!-- Photo -->
+          <div class="profile-form__section">
+            <div class="profile-form__section-title">Profile Photo</div>
+            <div class="avatar-upload">
+              <div class="avatar-upload__preview" id="avatarPreview">
+                <span class="avatar-upload__initials" id="avatarInitials">AM</span>
+              </div>
+              <div>
+                <button type="button" class="btn btn--secondary btn--small" id="avatarBtn">Change Photo</button>
+                <input type="file" accept="image/jpeg,image/png,image/webp" class="avatar-upload__input"
+                  id="avatarInput" />
+                <div class="field__hint" style="margin-top:6px">JPG, PNG, WEBP · Max 5MB</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Basic Info -->
+          <div class="profile-form__section">
+            <div class="profile-form__section-title">Basic Info</div>
+
+            <div class="field" style="margin-bottom:16px">
+              <label class="field__label" for="inputName">Full Name</label>
+              <input type="text" class="input" id="inputName" placeholder="Your full name" />
+            </div>
+
+            <div class="field" style="margin-bottom:16px">
+              <label class="field__label" for="inputUsername">Username</label>
+              <input type="text" class="input" id="inputUsername" placeholder="yourname" />
+              <div class="field__hint">case.app/@<span id="usernamePreview">username</span></div>
+              <div class="username-check" id="usernameCheck"></div>
+            </div>
+
+            <div class="field" style="margin-bottom:16px">
+              <label class="field__label" for="inputBio">Bio</label>
+              <textarea class="input" id="inputBio" placeholder="Tell us about yourself" maxlength="160"
+                rows="3"></textarea>
+              <div class="field__counter"><span id="bioCount">0</span>/160</div>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="inputRole">Role / Title</label>
+              <input type="text" class="input" id="inputRole" placeholder="e.g. Frontend Developer · Final Year CS" />
+            </div>
+          </div>
+
+          <!-- Social Links -->
+          <div class="profile-form__section">
+            <div class="profile-form__section-title">Social Links</div>
+
+            <div class="field" style="margin-bottom:16px">
+              <label class="field__label">GitHub</label>
+              <div class="social-field">
+                <div class="social-field__icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
+                  </svg>
+                </div>
+                <input type="url" class="input" id="inputGithub" placeholder="https://github.com/username" />
+              </div>
+            </div>
+
+            <div class="field" style="margin-bottom:16px">
+              <label class="field__label">LinkedIn</label>
+              <div class="social-field">
+                <div class="social-field__icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.064 2.064 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                  </svg>
+                </div>
+                <input type="url" class="input" id="inputLinkedin" placeholder="https://linkedin.com/in/username" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field__label">Portfolio / Other</label>
+              <div class="social-field">
+                <div class="social-field__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" y1="12" x2="22" y2="12" />
+                    <path
+                      d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  </svg>
+                </div>
+                <input type="url" class="input" id="inputPortfolio" placeholder="https://yoursite.com" />
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-form__save">
+            <button type="submit" class="btn btn--primary" id="saveProfileBtn">Save Changes</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ── PROJECTS ── -->
+      <div class="main__section" id="sec-projects">
+        <div class="projects-header">
+          <h2 class="section-title">Projects</h2>
+          <button class="btn btn--primary btn--small" id="addProjectBtn">+ Add Project</button>
+        </div>
+        <div class="projects-grid" id="projectsGrid"></div>
+      </div>
+
+      <!-- ── CERTIFICATES ── -->
+      <div class="main__section" id="sec-certificates">
+        <h2 class="section-title">Certificates</h2>
+
+        <div class="certs-limit" id="certsLimit" style="display:none">Maximum 10 certificates. Remove one to add more.
+        </div>
+
+        <div class="certs-add" id="certsAddForm">
+          <div class="field">
+            <label class="field__label" for="certName">Certificate Name</label>
+            <input type="text" class="input" id="certName" placeholder="e.g. AWS Solutions Architect" />
+          </div>
+          <div class="field">
+            <label class="field__label" for="certLink">Google Drive Link</label>
+            <input type="url" class="input" id="certLink" placeholder="https://drive.google.com/..." />
+          </div>
+          <button class="btn btn--primary" id="addCertBtn">Add</button>
+        </div>
+
+        <div class="cert-list" id="certList"></div>
+      </div>
+
+      <!-- ── MY CASE CODE ── -->
+      <div class="main__section" id="sec-case-code">
+        <div class="share-center">
+          <h2 class="share-center__heading">Your CASE Identity</h2>
+          <p class="share-center__subtext">Share your work with anyone, anywhere.</p>
+
+          <div class="share-center__code" id="caseCodeDisplay">---</div>
+          <br />
+          <button class="btn btn--primary btn--small" id="caseCodeCopy">Copy Code</button>
+
+          <div class="share-center__divider">or</div>
+
+          <div>Direct Link:</div>
+          <div class="share-center__link" id="caseCodeLink">case.app/@username</div>
+          <br />
+          <button class="btn btn--secondary btn--small" id="caseCodeCopyLink">Copy Link</button>
+
+          <div class="share-center__qr-container">
+            <div id="caseCodeQR"></div>
+            <div class="share-center__qr-text">
+              Scan to view<br>your profile<br>on any device
+            </div>
+          </div>
+
+          <div class="share-center__share-btns">
+            <button class="btn btn--secondary btn--small" id="caseDownloadQR">Download QR</button>
+            <button class="btn btn--secondary btn--small" id="caseShareWA">Share on WhatsApp</button>
+            <button class="btn btn--secondary btn--small" id="caseShareEmail">Email</button>
+          </div>
+
+          <div class="preview-card__label">Preview</div>
+          <div class="preview-card" id="profilePreview">
+            <div class="preview-card__avatar" id="previewAvatar">
+              <span class="preview-card__initials" id="previewInitials">AM</span>
+            </div>
+            <div class="preview-card__info">
+              <div class="preview-card__name" id="previewName">Alex Morgan</div>
+              <div class="preview-card__bio" id="previewBio">Full Stack Developer</div>
+              <div class="preview-card__stats">
+                <span><strong id="previewProjects">0</strong> projects</span>
+                <span><strong id="previewCerts">0</strong> certificates</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ═══════════════ PROJECT MODAL ═══════════════ -->
+  <div class="modal-overlay" id="projectModal">
+    <div class="modal">
+      <div class="modal__header">
+        <h3 class="modal__title" id="projectModalTitle">Add Project</h3>
+        <button class="modal__close" id="projectModalClose">✕</button>
+      </div>
+      <div class="modal__body">
+        <div class="field">
+          <label class="field__label">Project Name *</label>
+          <input type="text" class="input" id="projName" placeholder="My awesome project" />
+        </div>
+        <div class="field">
+          <label class="field__label">Description * <span class="field__counter" style="float:right"><span
+                id="projDescCount">0</span>/200</span></label>
+          <textarea class="input" id="projDesc" placeholder="Brief description of your project" maxlength="200"
+            rows="3"></textarea>
+        </div>
+        <div class="field">
+          <label class="field__label">Live Project Link *</label>
+          <input type="url" class="input" id="projUrl" placeholder="https://myproject.vercel.app" />
+          <div class="field__hint">Paste your deployed project URL</div>
+        </div>
+        <div class="field">
+          <label class="field__label">Tech Stack (optional)</label>
+          <div class="tag-input" id="tagInput">
+            <input type="text" class="tag-input__field" id="tagField" placeholder="Type & press Enter" />
+          </div>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--secondary" id="projectModalCancel">Cancel</button>
+        <button class="btn btn--primary" id="projectModalSave">Save Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ DELETE CONFIRM MODAL ═══════════════ -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal" style="max-width:380px;text-align:center">
+      <div class="modal__header">
+        <h3 class="modal__title">Confirm Delete</h3>
+        <button class="modal__close" id="deleteModalClose">✕</button>
+      </div>
+      <p style="color:var(--text-muted);margin-bottom:24px" id="deleteModalMsg">Are you sure you want to delete this
+        project? This can't be undone.</p>
+      <div class="modal__footer" style="justify-content:center">
+        <button class="btn btn--secondary" id="deleteModalCancel">Cancel</button>
+        <button class="btn btn--danger" id="deleteModalConfirm">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+  <script src="js/firebase-env.js"></script>
+  <script src="js/firebase-config.js" defer></script>
+  <script src="js/data-service.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/utils.js" defer></script>
+  <script src="js/dashboard.js" defer></script>
+</body>
+
+</html>
