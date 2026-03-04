@@ -183,46 +183,6 @@
         });
     }
 
-    // ─── Stats Counter Animation ───
-    function initStatsCounter() {
-        const statNumbers = document.querySelectorAll('.stat-number[data-target]');
-        if (!statNumbers.length) return;
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        const el = entry.target;
-                        const target = parseInt(el.dataset.target, 10);
-                        animateCounter(el, target);
-                        observer.unobserve(el);
-                    }
-                });
-            },
-            { threshold: 0.5 }
-        );
-
-        statNumbers.forEach((el) => observer.observe(el));
-    }
-
-    function animateCounter(el, target) {
-        const duration = 1800;
-        const start = performance.now();
-        function update(now) {
-            const elapsed = now - start;
-            const progress = Math.min(elapsed / duration, 1);
-            // ease-out curve
-            const eased = 1 - Math.pow(1 - progress, 3);
-            el.textContent = Math.floor(eased * target);
-            if (progress < 1) {
-                requestAnimationFrame(update);
-            } else {
-                el.textContent = target;
-            }
-        }
-        requestAnimationFrame(update);
-    }
-
     // ─── Scroll Indicator Hide ───
     function initScrollIndicator() {
         if (!DOM.scrollIndicator) return;
@@ -296,7 +256,6 @@
         initNavbarScroll();
         initSmoothScroll();
         initMobileMenu();
-        initStatsCounter();
         initScrollIndicator();
     }
 

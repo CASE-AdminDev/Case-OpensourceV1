@@ -27,7 +27,7 @@
   --space-15: 120px;
 
   /* Typography */
-  --font-display: 'Syne', sans-serif;
+  --font-display: 'Inter', sans-serif;
   --font-body:    'DM Sans', sans-serif;
 
   /* Layout */
@@ -464,9 +464,9 @@ button {
 .hero-headline {
   font-size: clamp(40px, 6vw, 64px);
   font-weight: 800;
-  line-height: 1.1;
+  line-height: 1.05;
   margin-bottom: var(--space-3);
-  letter-spacing: -1.5px;
+  letter-spacing: -2px;
 }
 
 .hero-tagline {
@@ -1060,59 +1060,6 @@ button {
   50%      { transform: translateX(-50%) translateY(6px); }
 }
 
-/* ═══════════════════════════════════
-   STATS BAR SECTION
-   ═══════════════════════════════════ */
-.stats-bar {
-  position: relative;
-  z-index: 1;
-  padding: var(--space-8) 0;
-  border-top: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.stats-grid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-5);
-  flex-wrap: wrap;
-}
-
-.stat-item {
-  text-align: center;
-  flex: 1;
-  min-width: 140px;
-}
-
-.stat-number {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 4vw, 44px);
-  font-weight: 800;
-  color: var(--text-primary);
-  line-height: 1;
-}
-
-.stat-suffix {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 3vw, 28px);
-  font-weight: 700;
-  color: var(--accent-blue);
-}
-
-.stat-label {
-  font-size: 14px;
-  color: var(--text-muted);
-  margin-top: 8px;
-  font-weight: 500;
-}
-
-.stat-divider {
-  width: 1px;
-  height: 48px;
-  background: var(--border-subtle);
-}
-
 /* ─── Feature SVG ─── */
 .feature-svg {
   width: 26px;
@@ -1331,8 +1278,6 @@ button {
     text-align: center;
     margin-top: var(--space-2);
   }
-  .stat-divider { display: none; }
-  .stats-grid { gap: var(--space-3); }
 }
 
 @media (max-width: 640px) {
