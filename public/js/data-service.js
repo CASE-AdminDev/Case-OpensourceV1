@@ -62,7 +62,7 @@ const DataService = (() => {
             username,
             bio: '',
             role: '',
-            photoURL: null,
+            photoURL: userData.photoURL || null,
             socialLinks: { github: '', linkedin: '', portfolio: '' },
             caseCode,
             stats: { profileViews: 0 },

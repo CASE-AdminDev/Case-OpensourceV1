@@ -14,6 +14,7 @@
         login:  document.getElementById('loginCard'),
         signup: document.getElementById('signupCard'),
         reset:  document.getElementById('resetCard'),
+        googleUsername: document.getElementById('googleUsernameCard'),
     };
 
     const loginForm      = document.getElementById('loginForm');
@@ -212,5 +213,100 @@
 
     // ── Redirect If Already Logged In ──
     AuthService.redirectIfAuth();
+
+    // ── Google Sign-In ──
+    const googleLoginBtn  = document.getElementById('googleLoginBtn');
+    const googleSignupBtn = document.getElementById('googleSignupBtn');
+
+    async function handleGoogleSignIn(errorEl) {
+        try {
+            const { user, isNew } = await AuthService.signInWithGoogle();
+            if (isNew) {
+                // New user — need to pick a username
+                showCard('googleUsername');
+            } else {
+                window.location.href = '/public/dashboard.html';
+            }
+        } catch (err) {
+            errorEl.textContent = AuthService.getErrorMessage(err);
+        }
+    }
+
+    googleLoginBtn.addEventListener('click', () => handleGoogleSignIn(loginError));
+    googleSignupBtn.addEventListener('click', () => handleGoogleSignIn(signupError));
+
+    // ── Google Username Picker ──
+    const googleUsernameForm  = document.getElementById('googleUsernameForm');
+    const googleUsernameInput = document.getElementById('googleUsername');
+    const googleUsernameHint  = document.getElementById('googleUsernameHint');
+    const googleUsernameError = document.getElementById('googleUsernameError');
+    const googleUsernameBtn   = document.getElementById('googleUsernameBtn');
+
+    let gUsernameTimer = null;
+
+    googleUsernameInput.addEventListener('input', () => {
+        const raw = googleUsernameInput.value;
+        googleUsernameInput.value = raw.toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 20);
+        const val = googleUsernameInput.value;
+
+        clearTimeout(gUsernameTimer);
+
+        if (!val) {
+            googleUsernameHint.textContent = '3-20 characters: lowercase, numbers, underscores';
+            googleUsernameHint.className = 'auth__hint';
+            return;
+        }
+        if (val.length < 3) {
+            googleUsernameHint.textContent = 'Username must be at least 3 characters';
+            googleUsernameHint.className = 'auth__hint auth__hint--error';
+            return;
+        }
+        if (!usernameRegex.test(val)) {
+            googleUsernameHint.textContent = 'Only lowercase letters, numbers, and underscores';
+            googleUsernameHint.className = 'auth__hint auth__hint--error';
+            return;
+        }
+
+        googleUsernameHint.textContent = 'Checking availability\u2026';
+        googleUsernameHint.className = 'auth__hint';
+
+        gUsernameTimer = setTimeout(async () => {
+            try {
+                const available = await DataService.checkUsername(val);
+                if (googleUsernameInput.value !== val) return;
+                if (available) {
+                    googleUsernameHint.textContent = '\u2713 Username is available';
+                    googleUsernameHint.className = 'auth__hint auth__hint--success';
+                } else {
+                    googleUsernameHint.textContent = '\u2717 Username is already taken';
+                    googleUsernameHint.className = 'auth__hint auth__hint--error';
+                }
+            } catch {
+                googleUsernameHint.textContent = 'Could not check availability';
+                googleUsernameHint.className = 'auth__hint';
+            }
+        }, 500);
+    });
+
+    googleUsernameForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        googleUsernameError.textContent = '';
+        const username = googleUsernameInput.value.trim();
+
+        if (!username || !usernameRegex.test(username)) {
+            googleUsernameError.textContent = 'Please enter a valid username.';
+            return;
+        }
+
+        setLoading(googleUsernameBtn, true);
+        try {
+            await AuthService.completeGoogleSignUp(username);
+            window.location.href = '/public/dashboard.html';
+        } catch (err) {
+            googleUsernameError.textContent = AuthService.getErrorMessage(err);
+        } finally {
+            setLoading(googleUsernameBtn, false);
+        }
+    });
 
 })();

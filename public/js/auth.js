@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════
-   CASE — Authentication Service (Email/Password)
-   Sign up, login, logout, auth state management.
+   CASE — Authentication Service
+   Email/Password + Google Sign-In
    Requires firebase-config.js to be loaded first.
    ═══════════════════════════════════════════════════ */
 
@@ -8,6 +8,8 @@ const AuthService = (() => {
     'use strict';
 
     const auth = FirebaseConfig.auth;
+    const googleProvider = new firebase.auth.GoogleAuthProvider();
+    googleProvider.setCustomParameters({ prompt: 'select_account' });
 
     // ── State listeners ──
     const _listeners = [];
@@ -88,6 +90,50 @@ const AuthService = (() => {
     }
 
     /**
+     * Sign in with Google popup.
+     * If the user is new (no Firestore doc), returns { isNew: true, user }.
+     * The caller must then collect a username and call completeGoogleSignUp().
+     * @returns {Promise<{ user: Object, isNew: boolean }>}
+     */
+    async function signInWithGoogle() {
+        const cred = await auth.signInWithPopup(googleProvider);
+        const user = cred.user;
+
+        // Check if Firestore user doc already exists
+        const snap = await FirebaseConfig.db.collection('users').doc(user.uid).get();
+        if (snap.exists) {
+            return { user, isNew: false };
+        }
+        return { user, isNew: true };
+    }
+
+    /**
+     * Complete Google sign-up by creating the Firestore user doc.
+     * Called after the user picks a username.
+     * @param {string} username
+     * @returns {Promise<Object>} user profile
+     */
+    async function completeGoogleSignUp(username) {
+        if (!/^[a-z0-9_]{3,20}$/.test(username)) {
+            throw new Error('Username must be 3-20 characters: lowercase letters, numbers, underscores only.');
+        }
+
+        const usernameSnap = await FirebaseConfig.db.collection('usernames').doc(username).get();
+        if (usernameSnap.exists) {
+            throw new Error('Username is already taken. Try another one.');
+        }
+
+        const user = auth.currentUser;
+        const fullName = user.displayName || '';
+        const profile = await DataService.createUser({
+            fullName,
+            username,
+            photoURL: user.photoURL || null,
+        });
+        return profile;
+    }
+
+    /**
      * Log out the current user.
      */
     async function logout() {
@@ -119,6 +165,10 @@ const AuthService = (() => {
             'auth/too-many-requests': 'Too many attempts. Please try again later.',
             'auth/invalid-credential': 'Invalid email or password.',
             'auth/network-request-failed': 'Network error. Check your connection.',
+            'auth/popup-closed-by-user': 'Sign-in popup was closed. Try again.',
+            'auth/cancelled-popup-request': 'Only one popup allowed at a time.',
+            'auth/popup-blocked': 'Popup was blocked by the browser. Allow popups and try again.',
+            'auth/account-exists-with-different-credential': 'An account already exists with this email using a different sign-in method.',
         };
         return map[error.code] || error.message || 'Something went wrong. Try again.';
     }
@@ -159,6 +209,8 @@ const AuthService = (() => {
         waitForAuth,
         signUp,
         login,
+        signInWithGoogle,
+        completeGoogleSignUp,
         logout,
         resetPassword,
         getErrorMessage,

@@ -220,6 +220,21 @@
   border-color: var(--accent-blue);
 }
 
+.auth__btn--google {
+  background: #fff;
+  color: #3c4043;
+  font-weight: 500;
+  border: 1px solid #dadce0;
+}
+.auth__btn--google:hover {
+  background: #f7f8f8;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  border-color: #c6c6c6;
+}
+.auth__btn--google svg {
+  flex-shrink: 0;
+}
+
 .auth__btn-arrow {
   transition: transform 0.2s;
 }
