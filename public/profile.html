@@ -29,26 +29,30 @@
   <!-- ═══════════════ TOP BAR ═══════════════ -->
   <div class="topbar">
     <a href="/" class="topbar__logo">C<span class="logo-a">A</span>SE</a>
-    <a href="/public/auth.html" class="topbar__cta">Create yours →</a>
+    <div class="topbar__actions">
+      <a href="/public/auth.html" class="topbar__cta" id="topbarCta">Create yours →</a>
+      <a href="/public/dashboard.html" class="topbar__cta topbar__cta--owner" id="editProfileBtn" style="display:none">
+        ✏️ Edit Profile
+      </a>
+    </div>
   </div>
 
   <!-- ═══════════════ PROFILE CONTENT ═══════════════ -->
   <div class="profile" id="profileContainer">
-
     <!-- Loading State -->
-    <div class="not-found" id="loadingState">
-      <div class="spinner" style="width:32px;height:32px;border-width:3px;"></div>
-      <div class="not-found__text">Loading profile...</div>
+    <div class="profile-loading" id="loadingState">
+      <div class="spinner" style="width:36px;height:36px;border-width:3px;"></div>
+      <div class="profile-loading__text">Loading profile…</div>
     </div>
-
   </div>
 
-  <!-- ═══════════════ NOT FOUND (hidden by default) ═══════════════ -->
+  <!-- ═══════════════ NOT FOUND ═══════════════ -->
   <template id="notFoundTemplate">
     <div class="not-found">
       <div class="not-found__code">404</div>
       <div class="not-found__text">Profile not found</div>
-      <a href="/public/explore.html" class="btn btn--primary" style="margin-top:16px">Try Another Code</a>
+      <p class="not-found__sub">The CASE code or username may be incorrect</p>
+      <a href="/public/explore.html" class="profile-btn profile-btn--primary" style="margin-top:16px">Try Another Code</a>
     </div>
   </template>
 
@@ -56,38 +60,75 @@
   <template id="profileTemplate">
     <div class="profile-content">
 
-      <!-- Header -->
-      <div class="profile-header" id="profileHeader">
-        <div class="profile-header__photo" id="profilePhoto"></div>
-        <h1 class="profile-header__name" id="profileName"></h1>
-        <div class="profile-header__username" id="profileUsername"></div>
-        <div class="profile-header__role" id="profileRole"></div>
-        <p class="profile-header__bio" id="profileBio"></p>
-        <div class="profile-header__social" id="profileSocial"></div>
-      </div>
+      <!-- ── Hero / Header Section ── -->
+      <section class="profile-hero" id="profileHero">
+        <div class="profile-hero__glow"></div>
+        <div class="profile-hero__photo" id="profilePhoto"></div>
+        <h1 class="profile-hero__name" id="profileName"></h1>
+        <div class="profile-hero__username" id="profileUsername"></div>
+        <div class="profile-hero__role" id="profileRole"></div>
+        <p class="profile-hero__bio" id="profileBio"></p>
+        <div class="profile-hero__case-code" id="profileCaseCode"></div>
+      </section>
 
-      <!-- Projects -->
-      <div class="profile-section" id="projectsSection">
-        <h2 class="profile-section__title">Projects</h2>
+      <!-- ── Social & Links Section ── -->
+      <section class="profile-section" id="socialsSection">
+        <h2 class="profile-section__title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20" height="20"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Connect
+        </h2>
+        <div class="social-links-grid" id="socialLinksGrid"></div>
+      </section>
+
+      <!-- ── Projects Section ── -->
+      <section class="profile-section" id="projectsSection">
+        <h2 class="profile-section__title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20" height="20"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          Projects
+        </h2>
+        <div class="profile-section__count" id="projectCount"></div>
         <div class="pub-projects-grid" id="projectsGrid"></div>
-      </div>
+      </section>
 
-      <!-- Certificates -->
-      <div class="profile-section" id="certsSection">
-        <h2 class="profile-section__title">Certificates</h2>
+      <!-- ── Certificates Section ── -->
+      <section class="profile-section" id="certsSection">
+        <h2 class="profile-section__title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+          Certificates
+        </h2>
+        <div class="profile-section__count" id="certCount"></div>
         <div class="pub-certs-grid" id="certsGrid"></div>
-      </div>
+      </section>
 
-      <!-- Footer -->
+      <!-- ── Footer ── -->
       <footer class="profile-footer">
         <p class="profile-footer__text">
-          Built with <span class="profile-footer__brand">C A S E</span> · <a href="/">case.app</a>
+          Built with <span class="profile-footer__brand">C A S E</span>
         </p>
-        <p class="profile-footer__text" style="font-size:12px;margin-top:4px">Code. Access. Share. Everywhere.</p>
+        <p class="profile-footer__tagline">Code. Access. Share. Everywhere.</p>
       </footer>
 
     </div>
   </template>
+
+  <!-- ═══════════ Certificate Preview Modal ═══════════ -->
+  <div class="cert-modal" id="certModal" style="display:none">
+    <div class="cert-modal__overlay" id="certModalOverlay"></div>
+    <div class="cert-modal__content">
+      <div class="cert-modal__header">
+        <h3 class="cert-modal__title" id="certModalTitle">Certificate</h3>
+        <button class="cert-modal__close" id="certModalClose">✕</button>
+      </div>
+      <div class="cert-modal__body">
+        <iframe class="cert-modal__iframe" id="certModalIframe" src="" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="cert-modal__footer">
+        <a class="profile-btn profile-btn--primary" id="certModalLink" href="#" target="_blank" rel="noopener">
+          Open in Google Drive →
+        </a>
+      </div>
+    </div>
+  </div>
 
   <!-- Firebase SDK (compat) -->
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -97,6 +138,7 @@
   <script src="js/firebase-env.js"></script>
   <script src="js/firebase-config.js" defer></script>
   <script src="js/data-service.js" defer></script>
+  <script src="js/auth.js" defer></script>
   <script src="js/utils.js" defer></script>
   <script src="js/profile.js" defer></script>
 </body>
