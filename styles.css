@@ -1160,121 +1160,6 @@ button {
 }
 
 /* ═══════════════════════════════════
-   PRICING SECTION
-   ═══════════════════════════════════ */
-.pricing {
-  position: relative;
-  z-index: 1;
-  padding: var(--space-15) 0;
-}
-
-.pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-3);
-  max-width: 720px;
-  margin: 0 auto;
-}
-
-.pricing-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  padding: 36px 32px;
-  position: relative;
-  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
-}
-.pricing-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-card-hover);
-}
-
-.pricing-popular {
-  border-color: rgba(59, 130, 246, 0.5);
-  box-shadow: 0 0 40px rgba(59, 130, 246, 0.1);
-  transform: translateY(-4px);
-}
-
-.pricing-badge {
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 4px 16px;
-  border-radius: 100px;
-  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-  font-size: 12px;
-  font-weight: 700;
-  color: white;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  white-space: nowrap;
-}
-
-.pricing-tier {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 12px;
-}
-
-.pricing-price {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-  margin-bottom: 8px;
-}
-
-.price-amount {
-  font-family: var(--font-display);
-  font-size: 48px;
-  font-weight: 800;
-  color: var(--text-primary);
-  line-height: 1;
-}
-
-.price-period {
-  font-size: 16px;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.pricing-desc {
-  font-size: 15px;
-  color: var(--text-muted);
-  margin-bottom: var(--space-3);
-}
-
-.pricing-features {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: var(--space-4);
-}
-
-.pricing-features li {
-  font-size: 15px;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.pricing-features .check {
-  color: var(--accent-blue);
-  font-weight: 700;
-  font-size: 14px;
-}
-
-.btn-pricing {
-  width: 100%;
-  text-align: center;
-  padding: 14px 24px;
-}
-
-/* ═══════════════════════════════════
    FOOTER — Full Layout
    ═══════════════════════════════════ */
 .footer {
@@ -1410,8 +1295,6 @@ button {
   .features-grid { grid-template-columns: 1fr; }
   .steps-grid { grid-template-columns: 1fr; }
   .step-card.step-highlight { transform: none; }
-  .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
-  .pricing-popular { transform: none; }
   .footer-top { flex-direction: column; gap: var(--space-4); }
   .footer-links { gap: var(--space-5); }
 }
