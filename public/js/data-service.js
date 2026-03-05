@@ -483,8 +483,8 @@ const DataService = (() => {
         const [projSnap, certSnap, qualSnap, expSnap] = await Promise.all([
             db.collection('users').doc(uid).collection('projects').orderBy('createdAt', 'desc').get(),
             db.collection('users').doc(uid).collection('certificates').orderBy('createdAt', 'desc').get(),
-            db.collection('users').doc(uid).collection('qualifications').orderBy('createdAt', 'desc').get(),
-            db.collection('users').doc(uid).collection('experiences').orderBy('createdAt', 'desc').get(),
+            db.collection('users').doc(uid).collection('qualifications').orderBy('createdAt', 'desc').get().catch(() => ({ docs: [] })),
+            db.collection('users').doc(uid).collection('experiences').orderBy('createdAt', 'desc').get().catch(() => ({ docs: [] })),
         ]);
 
         const user = { uid, ...userSnap.data() };

@@ -49,8 +49,8 @@
             renderSocialLinks(data.user);
             renderProjects(data.projects);
             renderCertificates(data.certificates);
-            renderQualifications(data.qualifications);
-            renderExperiences(data.experiences);
+            renderQualifications(data.qualifications || []);
+            renderExperiences(data.experiences || []);
 
             // Owner detection (non-blocking)
             detectOwner(data.user.uid);
