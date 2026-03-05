@@ -32,6 +32,13 @@ const DataService = (() => {
         return 'CASE-' + code;
     }
 
+    // ── Session Cache ──
+    // Invalidated on every mutation; scoped to the current browser session.
+    const _cache = Object.create(null);
+    function _cacheGet(key) { return Object.prototype.hasOwnProperty.call(_cache, key) ? _cache[key] : null; }
+    function _cacheSet(key, data) { _cache[key] = data; }
+    function _cacheInvalidate(...keys) { keys.forEach(k => { delete _cache[k]; }); }
+
     // ═══════════════════════════════════════
     //  USER / PROFILE
     // ═══════════════════════════════════════
@@ -41,9 +48,13 @@ const DataService = (() => {
      * @returns {Promise<Object|null>} user document data
      */
     async function getUser() {
+        const cached = _cacheGet('user');
+        if (cached) return cached;
         const snap = await _userRef().get();
         if (!snap.exists) return null;
-        return { uid: snap.id, ...snap.data() };
+        const data = { uid: snap.id, ...snap.data() };
+        _cacheSet('user', data);
+        return data;
     }
 
     /**
@@ -63,7 +74,7 @@ const DataService = (() => {
             bio: '',
             role: '',
             photoURL: userData.photoURL || null,
-            socialLinks: { github: '', linkedin: '', portfolio: '' },
+            socialLinks: { github: '', linkedin: '', portfolio: '', twitter: '', instagram: '', youtube: '', leetcode: '', hackerrank: '', whatsapp: '', telegram: '' },
             caseCode,
             stats: { profileViews: 0 },
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -82,6 +93,7 @@ const DataService = (() => {
         batch.set(db.collection('usernames').doc(username), { uid });
 
         await batch.commit();
+        _cacheInvalidate('user');
         return { uid, ...user };
     }
 
@@ -109,8 +121,8 @@ const DataService = (() => {
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                 });
                 await batch.commit();
-                const updated = await ref.get();
-                return { uid, ...updated.data() };
+                _cacheInvalidate('user');
+                return { uid, ...updates };
             }
         }
 
@@ -118,8 +130,8 @@ const DataService = (() => {
             ...updates,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        const updated = await ref.get();
-        return { uid, ...updated.data() };
+        _cacheInvalidate('user');
+        return { uid, ...updates };
     }
 
     /**
@@ -127,9 +139,7 @@ const DataService = (() => {
      * @returns {Promise<Object>} { percent, missing }
      */
     async function getProfileCompletion() {
-        const user = await getUser();
-        const projects = await getProjects();
-        const certs = await getCertificates();
+        const [user, projects, certs] = await Promise.all([getUser(), getProjects(), getCertificates()]);
 
         if (!user) return { percent: 0, missing: {} };
 
@@ -198,12 +208,15 @@ const DataService = (() => {
      * @returns {Promise<Array>}
      */
     async function getProjects() {
+        const cached = _cacheGet('projects');
+        if (cached) return cached;
         const snap = await _userRef()
             .collection('projects')
             .orderBy('createdAt', 'desc')
             .get();
-
-        return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        _cacheSet('projects', data);
+        return data;
     }
 
     /**
@@ -222,6 +235,7 @@ const DataService = (() => {
         };
 
         await _userRef().collection('projects').doc(id).set(data);
+        _cacheInvalidate('projects');
         return { id, ...data };
     }
 
@@ -237,8 +251,8 @@ const DataService = (() => {
             ...updates,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        const snap = await ref.get();
-        return { id: snap.id, ...snap.data() };
+        _cacheInvalidate('projects');
+        return { id, ...updates };
     }
 
     /**
@@ -247,6 +261,7 @@ const DataService = (() => {
      */
     async function deleteProject(id) {
         await _userRef().collection('projects').doc(id).delete();
+        _cacheInvalidate('projects');
     }
 
     // ═══════════════════════════════════════
@@ -258,12 +273,15 @@ const DataService = (() => {
      * @returns {Promise<Array>}
      */
     async function getCertificates() {
+        const cached = _cacheGet('certificates');
+        if (cached) return cached;
         const snap = await _userRef()
             .collection('certificates')
             .orderBy('createdAt', 'desc')
             .get();
-
-        return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        _cacheSet('certificates', data);
+        return data;
     }
 
     /**
@@ -283,6 +301,7 @@ const DataService = (() => {
         };
 
         await _userRef().collection('certificates').doc(id).set(data);
+        _cacheInvalidate('certificates');
         return { id, ...data };
     }
 
@@ -292,6 +311,7 @@ const DataService = (() => {
      */
     async function deleteCertificate(id) {
         await _userRef().collection('certificates').doc(id).delete();
+        _cacheInvalidate('certificates');
     }
 
     // ═══════════════════════════════════════
@@ -303,12 +323,15 @@ const DataService = (() => {
      * @returns {Promise<Array>}
      */
     async function getQualifications() {
+        const cached = _cacheGet('qualifications');
+        if (cached) return cached;
         const snap = await _userRef()
             .collection('qualifications')
             .orderBy('createdAt', 'desc')
             .get();
-
-        return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        _cacheSet('qualifications', data);
+        return data;
     }
 
     /**
@@ -330,6 +353,7 @@ const DataService = (() => {
         };
 
         await _userRef().collection('qualifications').doc(id).set(data);
+        _cacheInvalidate('qualifications');
         return { id, ...data };
     }
 
@@ -345,8 +369,8 @@ const DataService = (() => {
             ...updates,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        const snap = await ref.get();
-        return { id: snap.id, ...snap.data() };
+        _cacheInvalidate('qualifications');
+        return { id, ...updates };
     }
 
     /**
@@ -355,6 +379,7 @@ const DataService = (() => {
      */
     async function deleteQualification(id) {
         await _userRef().collection('qualifications').doc(id).delete();
+        _cacheInvalidate('qualifications');
     }
 
     // ═══════════════════════════════════════
@@ -366,12 +391,15 @@ const DataService = (() => {
      * @returns {Promise<Array>}
      */
     async function getExperiences() {
+        const cached = _cacheGet('experiences');
+        if (cached) return cached;
         const snap = await _userRef()
             .collection('experiences')
             .orderBy('createdAt', 'desc')
             .get();
-
-        return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        _cacheSet('experiences', data);
+        return data;
     }
 
     /**
@@ -393,6 +421,7 @@ const DataService = (() => {
         };
 
         await _userRef().collection('experiences').doc(id).set(data);
+        _cacheInvalidate('experiences');
         return { id, ...data };
     }
 
@@ -408,8 +437,8 @@ const DataService = (() => {
             ...updates,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        const snap = await ref.get();
-        return { id: snap.id, ...snap.data() };
+        _cacheInvalidate('experiences');
+        return { id, ...updates };
     }
 
     /**
@@ -418,6 +447,7 @@ const DataService = (() => {
      */
     async function deleteExperience(id) {
         await _userRef().collection('experiences').doc(id).delete();
+        _cacheInvalidate('experiences');
     }
 
     // ═══════════════════════════════════════
@@ -476,8 +506,8 @@ const DataService = (() => {
         const userSnap = await db.collection('users').doc(uid).get();
         if (!userSnap.exists) return { found: false };
 
-        // Increment view count
-        await incrementViews(uid);
+        // Increment view count (fire-and-forget — never block profile load)
+        incrementViews(uid).catch(() => {});
 
         // Fetch projects, certificates, qualifications & experiences in parallel
         const [projSnap, certSnap, qualSnap, expSnap] = await Promise.all([

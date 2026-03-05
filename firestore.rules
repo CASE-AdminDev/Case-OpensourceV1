@@ -25,9 +25,15 @@ service cloud.firestore {
       // Anyone can read public profiles
       allow read: if true;
 
-      // Only the authenticated owner can create/update their own doc
+      // Only the authenticated owner can create their own doc
       allow create: if isOwner(uid);
-      allow update: if isOwner(uid);
+
+      // Owner can update anything; public visitors can only increment profileViews
+      allow update: if isOwner(uid) ||
+        (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stats']) &&
+          request.resource.data.stats.diff(resource.data.stats).affectedKeys().hasOnly(['profileViews'])
+        );
 
       // Users cannot delete their own document (admin only)
       allow delete: if false;
