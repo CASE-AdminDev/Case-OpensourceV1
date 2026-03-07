@@ -173,14 +173,15 @@
 @media (max-width: 560px) {
   .explore__heading { font-size: 24px; }
   .explore__subtext { font-size: 14px; }
-  .explore__input { font-size: 16px; padding: 14px 18px; }
-  .explore__btn { padding: 14px; font-size: 15px; }
+  .explore__input { font-size: 16px; padding: 14px 18px; min-height: 48px; }
+  .explore__btn { padding: 14px; font-size: 15px; min-height: 48px; }
   .explore__logo { font-size: 22px; margin-bottom: var(--space-5); }
   .explore { padding: var(--space-3); }
 }
 
 @media (max-width: 400px) {
   .explore__heading { font-size: 20px; }
-  .explore__input { font-size: 15px; padding: 12px 14px; letter-spacing: 0.06em; }
-  .explore__btn { padding: 12px; font-size: 14px; }
+  .explore__input { font-size: 16px; padding: 12px 14px; letter-spacing: 0.06em; }
+  .explore__btn { padding: 14px; font-size: 14px; min-height: 48px; }
+  .explore { padding: var(--space-2); }
 }

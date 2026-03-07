@@ -47,6 +47,20 @@
 
 html { scroll-behavior: smooth; overflow-x: hidden; }
 
+/* ─── Mobile Touch Improvements ─── */
+a, button, input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  /* Disable hover effects on touch devices to prevent sticky hover states */
+  .card:hover {
+    transform: none;
+    box-shadow: var(--shadow-card);
+    border-color: var(--border-subtle);
+  }
+}
+
 body {
   font-family: var(--font-body);
   background: var(--bg-primary);
@@ -183,6 +197,21 @@ textarea.input {
   min-height: 80px;
 }
 
+select.input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+select.input option {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
 /* ─── Card Base ─── */
 .card {
   background: var(--bg-card);
@@ -291,8 +320,10 @@ textarea.input {
   font-weight: 700;
 }
 .modal__close {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
+  min-width: 44px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -303,6 +334,7 @@ textarea.input {
   cursor: pointer;
   border: none;
   transition: background 0.2s;
+  -webkit-tap-highlight-color: transparent;
 }
 .modal__close:hover { background: rgba(255, 255, 255, 0.12); }
 
@@ -387,7 +419,7 @@ textarea.input {
 
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
-  .btn { padding: 10px 16px; font-size: 13px; }
+  .btn { padding: 12px 18px; font-size: 14px; min-height: 44px; }
   .input { font-size: 16px; } /* Prevent iOS zoom on focus */
   .modal { padding: var(--space-3); width: 95%; }
   .modal__title { font-size: 18px; }
@@ -396,9 +428,11 @@ textarea.input {
 }
 
 @media (max-width: 480px) {
-  .btn { padding: 10px 14px; font-size: 12px; }
-  .btn--icon { width: 40px; height: 40px; } /* Larger touch target */
+  .btn { padding: 12px 16px; font-size: 13px; min-height: 44px; }
+  .btn--icon { width: 44px; height: 44px; } /* Proper touch target */
   .modal { padding: var(--space-2); }
+  .modal__title { font-size: 16px; }
   .empty-state { padding: var(--space-4) var(--space-2); }
   .empty-state__icon { width: 48px; height: 48px; }
+  .field__label { font-size: 12px; }
 }

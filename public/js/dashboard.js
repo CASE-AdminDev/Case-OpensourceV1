@@ -35,12 +35,33 @@
         const toggle = $('#sidebarToggle');
         const sidebar = $('#sidebar');
         if (toggle && sidebar) {
-            toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
-            // Close on section switch (mobile)
-            document.addEventListener('click', e => {
-                if (window.innerWidth <= 768 && sidebar.classList.contains('open') &&
-                    !sidebar.contains(e.target) && e.target !== toggle) {
-                    sidebar.classList.remove('open');
+            // Create sidebar backdrop
+            const sidebarBackdrop = document.createElement('div');
+            sidebarBackdrop.className = 'sidebar-backdrop';
+            document.body.appendChild(sidebarBackdrop);
+
+            function openSidebar() {
+                sidebar.classList.add('open');
+                sidebarBackdrop.classList.add('visible');
+            }
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                sidebarBackdrop.classList.remove('visible');
+            }
+
+            toggle.addEventListener('click', () => {
+                if (sidebar.classList.contains('open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+
+            sidebarBackdrop.addEventListener('click', closeSidebar);
+
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+                    closeSidebar();
                 }
             });
         }
@@ -63,6 +84,7 @@
         $(`#sec-${section}`)?.classList.add('active');
         // Close mobile sidebar
         $('#sidebar')?.classList.remove('open');
+        document.querySelector('.sidebar-backdrop')?.classList.remove('visible');
         // Refresh data
         loadSectionData(section);
     }
@@ -338,7 +360,7 @@
                     ${(p.techStack || []).map(t => `<span class="tag">${Utils.escapeHTML(t)}</span>`).join('')}
                 </div>
                 <div class="project-card__actions">
-                    <a href="${Utils.escapeHTML(p.liveUrl)}" target="_blank" rel="noopener">🔗 View Live</a>
+                    ${p.liveUrl ? `<a href="${Utils.escapeHTML(p.liveUrl)}" target="_blank" rel="noopener">🔗 View Live</a>` : '<span style="color:var(--text-muted);font-size:13px">No link added</span>'}
                     <span style="flex:1"></span>
                     <button class="btn--icon" data-edit="${p.id}" title="Edit">✏️</button>
                     <button class="btn--icon" data-delete-project="${p.id}" title="Delete">🗑️</button>
@@ -389,6 +411,19 @@
         // Save
         $('#projectModalSave')?.addEventListener('click', saveProject);
 
+        // Link dropdown toggle
+        $('#projHasLink')?.addEventListener('change', (e) => {
+            const val = e.target.value;
+            $('#projLinkFields').style.display = val === 'yes' ? '' : 'none';
+            $('#projNoLinkMsg').style.display = val === 'no' ? '' : 'none';
+            if (val === 'no') {
+                $('#projUrl').value = '';
+                $('#projTutorialVideo').src = 'https://www.youtube.com/embed/oIsf9zE-TRI?si=j-3TiAmlTNU9frxP';
+            } else {
+                $('#projTutorialVideo').src = '';
+            }
+        });
+
         initProjectImgUpload();
     }
 
@@ -399,6 +434,10 @@
         $('#projName').value = '';
         $('#projDesc').value = '';
         $('#projUrl').value = '';
+        $('#projHasLink').value = '';
+        $('#projLinkFields').style.display = 'none';
+        $('#projNoLinkMsg').style.display = 'none';
+        $('#projTutorialVideo').src = '';
         $('#projDescCount').textContent = '0';
         _clearProjectImgPreview();
         renderTags();
@@ -416,6 +455,16 @@
         $('#projName').value = proj.name;
         $('#projDesc').value = proj.description;
         $('#projUrl').value = proj.liveUrl;
+        if (proj.liveUrl) {
+            $('#projHasLink').value = 'yes';
+            $('#projLinkFields').style.display = '';
+            $('#projNoLinkMsg').style.display = 'none';
+        } else {
+            $('#projHasLink').value = 'no';
+            $('#projLinkFields').style.display = 'none';
+            $('#projNoLinkMsg').style.display = '';
+            $('#projTutorialVideo').src = 'https://www.youtube.com/embed/oIsf9zE-TRI?si=j-3TiAmlTNU9frxP';
+        }
         $('#projDescCount').textContent = proj.description.length;
         _clearProjectImgPreview();
         if (proj.previewUrl) _setProjectImgPreview(proj.previewUrl);
@@ -427,6 +476,7 @@
         Utils.closeModal($('#projectModal'));
         editingProjectId = null;
         modalTags = [];
+        $('#projTutorialVideo').src = '';
         _clearProjectImgPreview();
     }
 
@@ -479,10 +529,16 @@
     async function saveProject() {
         const name = $('#projName').value.trim();
         const description = $('#projDesc').value.trim();
+        const hasLink = $('#projHasLink').value;
         const liveUrl = $('#projUrl').value.trim();
 
-        if (!name || !description || !liveUrl) {
-            Utils.toast('Please fill all required fields', 'error');
+        if (!name || !description) {
+            Utils.toast('Please fill project name and description', 'error');
+            return;
+        }
+
+        if (!hasLink) {
+            Utils.toast('Please select whether you have a project link', 'error');
             return;
         }
 

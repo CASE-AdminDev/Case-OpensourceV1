@@ -56,6 +56,8 @@
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -66,6 +68,7 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
 }
 
 h1, h2, h3, h4 {
@@ -854,6 +857,30 @@ button {
   50%      { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
 }
 
+/* ─── Body Scroll Lock (when mobile menu is open) ─── */
+body.menu-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  -webkit-overflow-scrolling: none;
+}
+
+/* ─── Mobile Menu Backdrop ─── */
+.mobile-menu-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.mobile-menu-backdrop.visible {
+  display: block;
+  opacity: 1;
+}
+
 /* ─── Mobile Menu Button ─── */
 .mobile-menu-btn {
   display: none;
@@ -862,8 +889,13 @@ button {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 8px;
+  padding: 10px;
   z-index: 1001;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
 }
 .mobile-menu-btn span {
   display: block;
@@ -1252,8 +1284,9 @@ button {
     position: fixed;
     top: 0;
     right: -100%;
-    width: 280px;
+    width: min(280px, 85vw);
     height: 100vh;
+    height: 100dvh;
     background: rgba(15, 23, 42, 0.97);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -1265,6 +1298,7 @@ button {
     transition: right 0.35s var(--ease-smooth);
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
     z-index: 1000;
+    overscroll-behavior: contain;
   }
   .nav-links.open {
     right: 0;
@@ -1272,17 +1306,22 @@ button {
   .nav-link {
     display: block;
     font-size: 18px;
+    padding: 8px 0;
   }
   .btn-nav {
     width: 100%;
     text-align: center;
     margin-top: var(--space-2);
+    padding: 14px 22px;
   }
   .hero-headline {
     font-size: clamp(30px, 8vw, 48px);
   }
   .hero-description {
     font-size: 15px;
+  }
+  .section-header {
+    margin-bottom: var(--space-5);
   }
   .section-header h2 {
     font-size: clamp(26px, 5vw, 36px);
@@ -1300,10 +1339,20 @@ button {
   .step-card {
     padding: 28px 20px;
   }
+  .loader-logo {
+    font-size: 42px;
+  }
+  .loader-tagline {
+    font-size: 15px;
+  }
+  .social-link {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 @media (max-width: 640px) {
-  .hero { padding: var(--space-10) var(--space-3) var(--space-8); }
+  .hero { padding: var(--space-8) var(--space-3) var(--space-6); }
   .navbar { padding: 0 var(--space-3); }
   .hero-headline { letter-spacing: -0.5px; }
   .hero-tagline { font-size: 17px; }
@@ -1316,6 +1365,8 @@ button {
     width: 100%;
     justify-content: center;
     text-align: center;
+    padding: 14px 24px;
+    min-height: 48px;
   }
   .footer-inner { text-align: center; }
   .footer-bottom { flex-direction: column; gap: var(--space-2); }
@@ -1325,11 +1376,15 @@ button {
   .mockup-float { display: none; }
   .section-subheading { font-size: 15px; }
   .cta-sub { font-size: 15px; }
+  .features { padding: var(--space-10) 0; }
+  .how-it-works { padding: var(--space-8) 0 var(--space-10); }
+  .final-cta { padding: var(--space-8) 0 var(--space-10); }
 }
 
 @media (max-width: 480px) {
-  .hero { padding: 80px var(--space-2) var(--space-6); }
+  .hero { padding: var(--space-5) var(--space-2) var(--space-5); }
   .navbar { padding: 0 var(--space-2); }
+  .nav-inner { height: 60px; }
   .hero-headline {
     font-size: 28px;
     letter-spacing: -0.3px;
@@ -1343,6 +1398,9 @@ button {
   }
   .mockup-card { padding: 14px; margin-bottom: 10px; }
   .section-inner { padding: 0 var(--space-2); }
+  .section-header {
+    margin-bottom: var(--space-4);
+  }
   .feature-card { padding: 20px 16px; }
   .feature-card h3 { font-size: 18px; }
   .feature-card p { font-size: 14px; }
@@ -1355,5 +1413,17 @@ button {
   .btn-gradient {
     padding: 14px 28px;
     font-size: 15px;
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+  .loader-logo {
+    font-size: 36px;
+  }
+  .loader-tagline {
+    font-size: 14px;
+  }
+  .loader-bar {
+    width: 160px;
   }
 }

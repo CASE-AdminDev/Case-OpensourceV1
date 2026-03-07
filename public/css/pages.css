@@ -529,11 +529,25 @@
     align-items: flex-start;
     gap: var(--space-2);
   }
+  .page__content {
+    padding-top: calc(70px + var(--space-5));
+  }
+  .page-footer__links {
+    gap: var(--space-3);
+  }
+  .page-footer__social-link {
+    width: 44px;
+    height: 44px;
+  }
+  .page-topbar__cta {
+    min-height: 44px;
+    padding: 8px 16px;
+  }
 }
 
 @media (max-width: 640px) {
   .page__content {
-    padding-top: calc(70px + var(--space-6));
+    padding-top: calc(60px + var(--space-4));
   }
   .page__title {
     font-size: clamp(24px, 6vw, 32px);

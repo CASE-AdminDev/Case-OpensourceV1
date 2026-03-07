@@ -723,8 +723,10 @@
   font-weight: 600;
 }
 .cert-modal__close {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 8px;
   border: none;
   background: rgba(255, 255, 255, 0.06);
@@ -735,6 +737,7 @@
   align-items: center;
   justify-content: center;
   transition: background 0.2s, color 0.2s;
+  -webkit-tap-highlight-color: transparent;
 }
 .cert-modal__close:hover {
   background: rgba(239, 68, 68, 0.15);
@@ -827,12 +830,14 @@
    RESPONSIVE
    ═══════════════════════════════════════ */
 @media (max-width: 768px) {
-  .profile { padding: 68px 20px 40px; }
+  .profile { padding: 68px 16px 40px; }
   .profile-hero__name { font-size: 30px; }
   .pub-projects-grid { grid-template-columns: 1fr; }
   .pub-certs-grid { grid-template-columns: 1fr; }
   .pub-quals-grid { grid-template-columns: 1fr; }
   .cert-modal__content { max-height: 85vh; }
+  .profile-btn { min-height: 44px; }
+  .topbar__cta { min-height: 44px; padding: 8px 16px; }
 }
 
 @media (max-width: 640px) {
@@ -865,11 +870,20 @@
 @media (max-width: 480px) {
   .topbar__actions { gap: 8px; }
   .topbar__cta { font-size: 13px; }
-  .profile-hero__name { font-size: 24px; }
+  .profile-hero__name { font-size: 22px; }
   .profile-hero__photo { width: 80px; height: 80px; }
   .profile-hero__photo-initials { font-size: 30px; }
   .profile-hero__case-code { font-size: 12px; padding: 5px 14px; }
   .pub-cert-card__preview { height: 110px; }
   .not-found__code { font-size: 48px; }
   .not-found__text { font-size: 16px; }
+  .cert-modal { padding: 8px; }
+  .cert-modal__body { min-height: 220px; max-height: 55vh; }
+  .cert-modal__iframe { min-height: 220px; }
+  .pub-project-card__actions { flex-direction: column; }
+  .pub-project-card__actions .profile-btn { width: 100%; justify-content: center; }
+  .profile-hero__bio { font-size: 13px; }
+  .profile-hero__role { font-size: 13px; }
+  .pub-exp-card { flex-direction: column; gap: 8px; }
+  .pub-qual-card { flex-direction: column; gap: 8px; }
 }
