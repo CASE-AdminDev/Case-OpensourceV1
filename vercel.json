@@ -1,6 +1,6 @@
 {
   "installCommand": "echo skip",
-  "buildCommand": "node scripts/generate-env.js",
+  "buildCommand": "echo skip",
   "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,

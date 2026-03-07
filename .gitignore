@@ -3,7 +3,6 @@
 # ═══════════════════════════════════════
 
 # ── Environment / Secrets ──
-public/js/firebase-env.js
 .env
 .env.*
 *.env
