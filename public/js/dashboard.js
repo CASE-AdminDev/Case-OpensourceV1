@@ -218,19 +218,23 @@
         $('#avatarInput')?.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
-            if (file.size > 5 * 1024 * 1024) {
-                Utils.toast('File too large. Max 5MB.', 'error');
-                return;
-            }
-            // Convert to base64 for localStorage (in Firebase: upload to Cloudinary/Storage)
-            const reader = new FileReader();
-            reader.onload = async () => {
-                await DataService.updateUser({ photoURL: reader.result });
+
+            const btn = $('#avatarBtn');
+            btn.textContent = 'Uploading...';
+            btn.disabled = true;
+            try {
                 const user = await DataService.getUser();
-                updateAvatarPreview(user);
+                const url = await uploadProfilePhoto(file, user.uid);
+                await DataService.updateUser({ photoURL: url });
+                const updated = await DataService.getUser();
+                updateAvatarPreview(updated);
                 Utils.toast('Photo updated', 'success');
-            };
-            reader.readAsDataURL(file);
+            } catch (err) {
+                Utils.toast(err.message || 'Upload failed', 'error');
+            } finally {
+                btn.textContent = 'Change Photo';
+                btn.disabled = false;
+            }
         });
 
         // Bio counter
@@ -327,6 +331,7 @@
 
         grid.innerHTML = projects.map(p => `
             <div class="project-card" data-id="${p.id}">
+                ${p.previewUrl ? `<div class="project-card__preview"><img src="${Utils.escapeHTML(p.previewUrl)}" alt="${Utils.escapeHTML(p.name)}" loading="lazy" /></div>` : ''}
                 <div class="project-card__name">${Utils.escapeHTML(p.name)}</div>
                 <div class="project-card__desc">${Utils.escapeHTML(p.description)}</div>
                 <div class="project-card__tags">
@@ -383,6 +388,8 @@
 
         // Save
         $('#projectModalSave')?.addEventListener('click', saveProject);
+
+        initProjectImgUpload();
     }
 
     function openAddProject() {
@@ -393,6 +400,7 @@
         $('#projDesc').value = '';
         $('#projUrl').value = '';
         $('#projDescCount').textContent = '0';
+        _clearProjectImgPreview();
         renderTags();
         Utils.openModal($('#projectModal'));
     }
@@ -409,6 +417,8 @@
         $('#projDesc').value = proj.description;
         $('#projUrl').value = proj.liveUrl;
         $('#projDescCount').textContent = proj.description.length;
+        _clearProjectImgPreview();
+        if (proj.previewUrl) _setProjectImgPreview(proj.previewUrl);
         renderTags();
         Utils.openModal($('#projectModal'));
     }
@@ -417,6 +427,33 @@
         Utils.closeModal($('#projectModal'));
         editingProjectId = null;
         modalTags = [];
+        _clearProjectImgPreview();
+    }
+
+    function _clearProjectImgPreview() {
+        $('#projImgInput').value = '';
+        $('#projImgPreviewImg').src = '';
+        $('#projImgPreview').style.display = 'none';
+        $('#projImgZone').style.display = '';
+    }
+
+    function _setProjectImgPreview(url) {
+        $('#projImgPreviewImg').src = url;
+        $('#projImgPreview').style.display = 'block';
+        $('#projImgZone').style.display = 'none';
+    }
+
+    function initProjectImgUpload() {
+        $('#projImgInput')?.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const objectUrl = URL.createObjectURL(file);
+            _setProjectImgPreview(objectUrl);
+        });
+        $('#projImgRemove')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            _clearProjectImgPreview();
+        });
     }
 
     function renderTags() {
@@ -454,17 +491,31 @@
         saveBtn.disabled = true;
 
         try {
+            const user = await DataService.getUser();
+            const projectId = editingProjectId || `proj_${Date.now()}`;
+
+            // Upload preview image if a new file was selected
+            let previewUrl = '';
             if (editingProjectId) {
-                await DataService.updateProject(editingProjectId, { name, description, liveUrl, techStack: modalTags });
+                const existing = (await DataService.getProjects()).find(p => p.id === editingProjectId);
+                previewUrl = existing?.previewUrl || '';
+            }
+            const imgFile = $('#projImgInput')?.files[0];
+            if (imgFile) {
+                previewUrl = await uploadProjectPreview(imgFile, user.uid, projectId);
+            }
+
+            if (editingProjectId) {
+                await DataService.updateProject(editingProjectId, { name, description, liveUrl, techStack: modalTags, previewUrl });
             } else {
-                await DataService.addProject({ name, description, liveUrl, techStack: modalTags });
+                await DataService.addProject({ name, description, liveUrl, techStack: modalTags, previewUrl });
             }
             const wasEditing = !!editingProjectId;
             closeProjectModal();
             await loadProjects();
             Utils.toast(wasEditing ? 'Project updated' : 'Project added', 'success');
         } catch (err) {
-            Utils.toast('Something went wrong', 'error');
+            Utils.toast(err.message || 'Something went wrong', 'error');
         } finally {
             saveBtn.innerHTML = 'Save Project';
             saveBtn.disabled = false;
@@ -504,10 +555,12 @@
 
         list.innerHTML = certs.map(c => `
             <div class="cert-row" data-cert-id="${c.id}">
-                <div class="cert-row__icon">🏅</div>
+                <div class="cert-row__thumb">
+                    <img src="${Utils.escapeHTML(c.imageUrl)}" alt="${Utils.escapeHTML(c.name)}" loading="lazy" />
+                </div>
                 <div class="cert-row__name">${Utils.escapeHTML(c.name)}</div>
                 <div class="cert-row__actions">
-                    <a href="${Utils.escapeHTML(c.driveUrl)}" target="_blank" rel="noopener" class="btn btn--secondary btn--small">View</a>
+                    <a href="${Utils.escapeHTML(c.imageUrl)}" target="_blank" rel="noopener" class="btn btn--secondary btn--small">View</a>
                     <button class="btn btn--danger btn--small" data-delete-cert="${c.id}">Delete</button>
                 </div>
             </div>
@@ -553,22 +606,30 @@
 
     function initCertificates() {
         $('#addCertBtn')?.addEventListener('click', async () => {
-            const name = $('#certName').value.trim();
-            const driveUrl = $('#certLink').value.trim();
+            const name  = $('#certName').value.trim();
+            const file  = $('#certImage')?.files[0];
 
-            if (!name || !driveUrl) {
-                Utils.toast('Please fill both fields', 'error');
-                return;
-            }
+            if (!name) { Utils.toast('Please enter a certificate name', 'error'); return; }
+            if (!file) { Utils.toast('Please select a certificate image', 'error'); return; }
+
+            const btn = $('#addCertBtn');
+            btn.textContent = 'Uploading...';
+            btn.disabled = true;
 
             try {
-                await DataService.addCertificate({ name, driveUrl });
+                const user    = await DataService.getUser();
+                const certId  = `cert_${Date.now()}`;
+                const imageUrl = await uploadCertificateImage(file, user.uid, certId);
+                await DataService.addCertificate({ name, imageUrl });
                 $('#certName').value = '';
-                $('#certLink').value = '';
+                $('#certImage').value = '';
                 await loadCertificates();
                 Utils.toast('Certificate added', 'success');
             } catch (err) {
                 Utils.toast(err.message || 'Something went wrong', 'error');
+            } finally {
+                btn.textContent = 'Add';
+                btn.disabled = false;
             }
         });
     }

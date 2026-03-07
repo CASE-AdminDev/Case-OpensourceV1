@@ -370,15 +370,18 @@
         </div>
 
         <div class="certs-add" id="certsAddForm">
-          <div class="field">
-            <label class="field__label" for="certName">Certificate Name</label>
-            <input type="text" class="input" id="certName" placeholder="e.g. AWS Solutions Architect" />
+          <div class="certs-add__fields">
+            <div class="field">
+              <label class="field__label" for="certName">Certificate Name</label>
+              <input type="text" class="input" id="certName" placeholder="e.g. AWS Solutions Architect" />
+            </div>
+            <div class="field">
+              <label class="field__label" for="certImage">Certificate Image</label>
+              <input type="file" class="input" id="certImage" accept="image/jpeg,image/png,image/webp" />
+              <div class="field__hint">JPG, PNG, WEBP · Max 8MB · No PDFs</div>
+            </div>
           </div>
-          <div class="field">
-            <label class="field__label" for="certLink">Google Drive Link</label>
-            <input type="url" class="input" id="certLink" placeholder="https://drive.google.com/..." />
-          </div>
-          <button class="btn btn--primary" id="addCertBtn">Add</button>
+          <button class="btn btn--primary" id="addCertBtn">Add Certificate</button>
         </div>
 
         <div class="cert-list" id="certList"></div>
@@ -523,8 +526,21 @@
           <input type="url" class="input" id="projUrl" placeholder="https://myproject.vercel.app" />
           <div class="field__hint">Paste your deployed project URL</div>
         </div>
-        <div class="field">
-          <label class="field__label">Tech Stack (optional)</label>
+        <div class="field">          <label class="field__label">Preview Image (optional)</label>
+          <div class="proj-img-upload" id="projImgUpload">
+            <div class="proj-img-upload__preview" id="projImgPreview" style="display:none">
+              <img id="projImgPreviewImg" src="" alt="Preview" />
+              <button type="button" class="proj-img-upload__remove" id="projImgRemove" title="Remove">✕</button>
+            </div>
+            <label class="proj-img-upload__zone" id="projImgZone" for="projImgInput">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+              <span>Click to upload project screenshot</span>
+              <small>JPG, PNG, WEBP · Max 8MB</small>
+            </label>
+            <input type="file" id="projImgInput" accept="image/jpeg,image/png,image/webp" style="display:none" />
+          </div>
+        </div>
+        <div class="field">          <label class="field__label">Tech Stack (optional)</label>
           <div class="tag-input" id="tagInput">
             <input type="text" class="tag-input__field" id="tagField" placeholder="Type & press Enter" />
           </div>
@@ -563,6 +579,7 @@
   <script src="js/data-service.js" defer></script>
   <script src="js/auth.js" defer></script>
   <script src="js/utils.js" defer></script>
+  <script src="js/cloudinary.js" defer></script>
   <script src="js/dashboard.js" defer></script>
 </body>
 

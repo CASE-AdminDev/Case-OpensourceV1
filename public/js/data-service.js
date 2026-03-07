@@ -231,6 +231,7 @@ const DataService = (() => {
             description: project.description || '',
             liveUrl: project.liveUrl || '',
             techStack: project.techStack || [],
+            previewUrl: project.previewUrl || '',
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         };
 
@@ -286,7 +287,7 @@ const DataService = (() => {
 
     /**
      * Add a new certificate.
-     * @param {Object} cert — { name, driveUrl }
+     * @param {Object} cert — { name, imageUrl }
      * @returns {Promise<Object>}
      */
     async function addCertificate(cert) {
@@ -296,7 +297,7 @@ const DataService = (() => {
         const id = _generateId();
         const data = {
             name: cert.name || '',
-            driveUrl: cert.driveUrl || '',
+            imageUrl: cert.imageUrl || '',
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         };
 

@@ -348,46 +348,20 @@
 
         countEl.textContent = `${certs.length} certificate${certs.length !== 1 ? 's' : ''}`;
 
-        grid.innerHTML = certs.map((c, i) => {
-            const embedUrl = toGDriveEmbedUrl(c.driveUrl);
-            const previewHtml = embedUrl
-                ? `<iframe src="${Utils.escapeHTML(embedUrl)}" loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>`
-                : `<div class="pub-cert-card__preview-placeholder">
-                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
-                       <span>Certificate</span>
-                   </div>`;
-
-            return `
-                <div class="pub-cert-card" data-idx="${i}" data-url="${Utils.escapeHTML(c.driveUrl || '')}" data-name="${Utils.escapeHTML(c.name)}" data-embed="${Utils.escapeHTML(embedUrl || '')}">
-                    <div class="pub-cert-card__preview">${previewHtml}</div>
-                    <div class="pub-cert-card__body">
-                        <div class="pub-cert-card__info">
-                            <span class="pub-cert-card__badge">🏅</span>
-                            <span class="pub-cert-card__name">${Utils.escapeHTML(c.name)}</span>
-                        </div>
-                        <span class="pub-cert-card__view">Preview →</span>
-                    </div>
+        grid.innerHTML = certs.map((c, i) => `
+            <div class="pub-cert-card" data-idx="${i}" data-url="${Utils.escapeHTML(c.imageUrl || '')}" data-name="${Utils.escapeHTML(c.name)}">
+                <div class="pub-cert-card__preview">
+                    <img src="${Utils.escapeHTML(c.imageUrl)}" alt="${Utils.escapeHTML(c.name)}" loading="lazy" />
                 </div>
-            `;
-        }).join('');
-    }
-
-    /**
-     * Convert a Google Drive share link to an embeddable preview URL.
-     * Handles: /file/d/FILE_ID/view  and  ?id=FILE_ID
-     */
-    function toGDriveEmbedUrl(url) {
-        if (!url) return null;
-        // Pattern: https://drive.google.com/file/d/FILE_ID/view...
-        let match = url.match(/\/file\/d\/([^/]+)/);
-        if (match) return `https://drive.google.com/file/d/${match[1]}/preview`;
-        // Pattern: ?id=FILE_ID
-        try {
-            const u = new URL(url);
-            const id = u.searchParams.get('id');
-            if (id) return `https://drive.google.com/file/d/${id}/preview`;
-        } catch (_) {}
-        return null;
+                <div class="pub-cert-card__body">
+                    <div class="pub-cert-card__info">
+                        <span class="pub-cert-card__badge">🏅</span>
+                        <span class="pub-cert-card__name">${Utils.escapeHTML(c.name)}</span>
+                    </div>
+                    <span class="pub-cert-card__view">Preview →</span>
+                </div>
+            </div>
+        `).join('');
     }
 
     /* ═══════════════ QUALIFICATIONS ═══════════════ */
@@ -446,30 +420,25 @@
 
     /* ═══════════════ CERTIFICATE MODAL ═══════════════ */
     function initCertModal() {
-        const modal = document.getElementById('certModal');
-        const overlay = document.getElementById('certModalOverlay');
+        const modal    = document.getElementById('certModal');
+        const overlay  = document.getElementById('certModalOverlay');
         const closeBtn = document.getElementById('certModalClose');
-        const iframe = document.getElementById('certModalIframe');
-        const titleEl = document.getElementById('certModalTitle');
-        const linkEl = document.getElementById('certModalLink');
+        const imgEl    = document.getElementById('certModalImg');
+        const titleEl  = document.getElementById('certModalTitle');
+        const linkEl   = document.getElementById('certModalLink');
 
         // Click on any certificate card → open modal
         document.addEventListener('click', (e) => {
             const card = e.target.closest('.pub-cert-card');
             if (!card) return;
 
-            const embedUrl = card.dataset.embed;
-            const name = card.dataset.name;
-            const driveUrl = card.dataset.url;
+            const imageUrl = card.dataset.url;
+            const name     = card.dataset.name;
 
             titleEl.textContent = name || 'Certificate';
-            linkEl.href = driveUrl || '#';
-
-            if (embedUrl) {
-                iframe.src = embedUrl;
-            } else {
-                iframe.src = '';
-            }
+            linkEl.href         = imageUrl || '#';
+            imgEl.src           = imageUrl || '';
+            imgEl.alt           = name || 'Certificate';
 
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -486,7 +455,7 @@
         // Close handlers
         function closeModal() {
             modal.style.display = 'none';
-            iframe.src = '';
+            imgEl.src = '';
             document.body.style.overflow = '';
         }
 
