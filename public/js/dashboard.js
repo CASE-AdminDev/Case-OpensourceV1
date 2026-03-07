@@ -414,8 +414,8 @@
         // Link dropdown toggle
         $('#projHasLink')?.addEventListener('change', (e) => {
             const val = e.target.value;
-            $('#projLinkFields').style.display = val === 'yes' ? '' : 'none';
-            $('#projNoLinkMsg').style.display = val === 'no' ? '' : 'none';
+            $('#projLinkFields').style.display = val === 'yes' ? 'block' : 'none';
+            $('#projNoLinkMsg').style.display = val === 'no' ? 'block' : 'none';
             if (val === 'no') {
                 $('#projUrl').value = '';
                 $('#projTutorialVideo').src = 'https://www.youtube.com/embed/oIsf9zE-TRI?si=j-3TiAmlTNU9frxP';
@@ -457,12 +457,12 @@
         $('#projUrl').value = proj.liveUrl;
         if (proj.liveUrl) {
             $('#projHasLink').value = 'yes';
-            $('#projLinkFields').style.display = '';
+            $('#projLinkFields').style.display = 'block';
             $('#projNoLinkMsg').style.display = 'none';
         } else {
             $('#projHasLink').value = 'no';
             $('#projLinkFields').style.display = 'none';
-            $('#projNoLinkMsg').style.display = '';
+            $('#projNoLinkMsg').style.display = 'block';
             $('#projTutorialVideo').src = 'https://www.youtube.com/embed/oIsf9zE-TRI?si=j-3TiAmlTNU9frxP';
         }
         $('#projDescCount').textContent = proj.description.length;
