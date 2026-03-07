@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40" fill="none">
+  <!-- Icon -->
+  <rect width="40" height="40" rx="10" fill="#3B82F6"/>
+  <text x="20" y="29" font-size="24" font-weight="bold" fill="white" text-anchor="middle" font-family="sans-serif">C</text>
+  <!-- Wordmark -->
+  <text x="52" y="29" font-size="24" font-weight="700" fill="#F8FAFC" font-family="sans-serif" letter-spacing="2">CASE</text>
+</svg>
