@@ -11,12 +11,13 @@ const FirebaseConfig = (() => {
     // Falls back to hardcoded public config so preview deployments work.
     // Firebase config keys are NOT secret — security is enforced by Firestore rules.
     const _fallback = {
-        apiKey: "AIzaSyDkQRvc_q5e9h8eYYp4fB9adQnNEVewXSs",
-        authDomain: "case-edition1.firebaseapp.com",
-        projectId: "case-edition1",
-        storageBucket: "case-edition1.firebasestorage.app",
-        messagingSenderId: "332314252593",
-        appId: "1:332314252593:web:9497edd289934736d78c10",
+        apiKey: "AIzaSyBgC_R63H3lQmaWNVjC68UTa7Y5vB_VzOU",
+        authDomain: "case-v1.firebaseapp.com",
+        projectId: "case-v1",
+        storageBucket: "case-v1.firebasestorage.app",
+        messagingSenderId: "483331019592",
+        appId: "1:483331019592:web:d4f09c1bdbfc368a7b597d",
+        measurementId: "G-W7TNE7XSK0",
     };
     const config = window.__FIREBASE_CONFIG__ || _fallback;
 
