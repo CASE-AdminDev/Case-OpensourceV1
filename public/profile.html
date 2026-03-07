@@ -16,11 +16,14 @@
     href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet" />
   </noscript>
 
   <link rel="stylesheet" href="css/shared.css" />
   <link rel="stylesheet" href="css/profile.css" />
+  <link rel="stylesheet" href="css/loader.css" />
 </head>
 
 <body>
@@ -36,13 +39,46 @@
     </div>
   </div>
 
-  <!-- ═══════════════ PROFILE CONTENT ═══════════════ -->
-  <div class="profile" id="profileContainer">
-    <!-- Loading State -->
-    <div class="profile-loading" id="loadingState">
-      <div class="spinner" style="width:36px;height:36px;border-width:3px;"></div>
-      <div class="profile-loading__text">Loading profile…</div>
+  <!-- ═══════════ WORLD'S GREATEST LOADER ═══════════ -->
+  <div class="case-loader" id="caseLoader" aria-label="Loading profile" role="status">
+
+    <!-- Full-screen canvas: starfield + CASE logo + particle sphere -->
+    <canvas class="case-loader__canvas" id="loaderCanvas"></canvas>
+
+    <!-- Typewriter status line -->
+    <div class="case-loader__status">
+      <div class="case-loader__phrase" id="loaderPhrase"></div>
+      <div class="case-loader__cursor">|</div>
     </div>
+
+    <!-- Holographic progress bar -->
+    <div class="case-loader__bar-wrap">
+      <div class="case-loader__bar" id="loaderBar"></div>
+      <div class="case-loader__bar-glow"></div>
+    </div>
+
+    <!-- Corner HUD decorations -->
+    <div class="case-loader__hud case-loader__hud--tl">
+      <div class="hud-bracket hud-bracket--tl"></div>
+      <span class="hud-text">SYS::INIT</span>
+    </div>
+    <div class="case-loader__hud case-loader__hud--tr">
+      <span class="hud-text">v4.0.0</span>
+      <div class="hud-bracket hud-bracket--tr"></div>
+    </div>
+    <div class="case-loader__hud case-loader__hud--bl">
+      <div class="hud-bracket hud-bracket--bl"></div>
+      <span class="hud-text" id="hudStatus">FETCHING</span>
+    </div>
+    <div class="case-loader__hud case-loader__hud--br">
+      <span class="hud-text" id="hudPct">0%</span>
+      <div class="hud-bracket hud-bracket--br"></div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ PROFILE CONTENT ═══════════════ -->
+  <div class="profile" id="profileContainer" style="display:none">
   </div>
 
   <!-- ═══════════════ NOT FOUND ═══════════════ -->
@@ -51,7 +87,8 @@
       <div class="not-found__code">404</div>
       <div class="not-found__text">Profile not found</div>
       <p class="not-found__sub">The CASE code or username may be incorrect</p>
-      <a href="/public/explore.html" class="profile-btn profile-btn--primary" style="margin-top:16px">Try Another Code</a>
+      <a href="/public/explore.html" class="profile-btn profile-btn--primary" style="margin-top:16px">Try Another
+        Code</a>
     </div>
   </template>
 
@@ -73,7 +110,11 @@
       <!-- ── Social & Links Section ── -->
       <section class="profile-section" id="socialsSection">
         <h2 class="profile-section__title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20" height="20"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20"
+            height="20">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+          </svg>
           Connect
         </h2>
         <div class="social-links-grid" id="socialLinksGrid"></div>
@@ -82,9 +123,13 @@
       <!-- ── Career Journey Map Section ── -->
       <section class="profile-section" id="journeySection">
         <h2 class="profile-section__title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20" height="20">
-            <circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/>
-            <line x1="12" y1="7" x2="12" y2="10"/><line x1="12" y1="14" x2="12" y2="17"/>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20"
+            height="20">
+            <circle cx="12" cy="5" r="2" />
+            <circle cx="12" cy="12" r="2" />
+            <circle cx="12" cy="19" r="2" />
+            <line x1="12" y1="7" x2="12" y2="10" />
+            <line x1="12" y1="14" x2="12" y2="17" />
           </svg>
           Career Journey
         </h2>
@@ -95,7 +140,10 @@
       <!-- ── Projects Section ── -->
       <section class="profile-section" id="projectsSection">
         <h2 class="profile-section__title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20" height="20"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20"
+            height="20">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+          </svg>
           Projects
         </h2>
         <div class="profile-section__count" id="projectCount"></div>
@@ -105,7 +153,11 @@
       <!-- ── Certificates Section ── -->
       <section class="profile-section" id="certsSection">
         <h2 class="profile-section__title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20"
+            height="20">
+            <circle cx="12" cy="8" r="7" />
+            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+          </svg>
           Certificates
         </h2>
         <div class="profile-section__count" id="certCount"></div>
@@ -115,11 +167,12 @@
       <!-- ── Qualifications Section ── -->
       <section class="profile-section" id="qualsSection">
         <h2 class="profile-section__title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20" height="20">
-            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-            <line x1="9" y1="7" x2="17" y2="7"/>
-            <line x1="9" y1="11" x2="15" y2="11"/>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20"
+            height="20">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+            <line x1="9" y1="7" x2="17" y2="7" />
+            <line x1="9" y1="11" x2="15" y2="11" />
           </svg>
           Qualifications
         </h2>
@@ -130,9 +183,10 @@
       <!-- ── Experiences Section ── -->
       <section class="profile-section" id="expsSection">
         <h2 class="profile-section__title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20" height="20">
-            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
-            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="20"
+            height="20">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
           </svg>
           Experience
         </h2>
@@ -180,6 +234,8 @@
   <script src="js/data-service.js" defer></script>
   <script src="js/auth.js" defer></script>
   <script src="js/utils.js" defer></script>
+  <!-- Loader engine runs before profile logic -->
+  <script src="js/loader.js"></script>
   <script src="js/profile.js" defer></script>
 </body>
 

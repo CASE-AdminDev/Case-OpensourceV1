@@ -19,7 +19,8 @@
     }
 
     if (!username) {
-        showNotFound();
+        if (window.CaseLoader) window.CaseLoader.dismiss().then(showNotFound);
+        else showNotFound();
         return;
     }
 
@@ -31,6 +32,10 @@
             const data = await DataService.getPublicProfile(uname);
 
             if (!data.found) {
+                // Dismiss loader then show not-found
+                if (window.CaseLoader) {
+                    await window.CaseLoader.dismiss();
+                }
                 showNotFound();
                 return;
             }
@@ -56,6 +61,11 @@
             // Owner detection (non-blocking)
             detectOwner(data.user.uid);
 
+            // ── Dismiss the cinematic loader, THEN reveal sections ──
+            if (window.CaseLoader) {
+                await window.CaseLoader.dismiss();
+            }
+
             // Sequential reveal
             revealSections();
 
@@ -69,6 +79,9 @@
 
         } catch (err) {
             console.error('Failed to load profile:', err);
+            if (window.CaseLoader) {
+                await window.CaseLoader.dismiss();
+            }
             showNotFound();
         }
     }
@@ -425,12 +438,12 @@
 
     /* ═══════════════ CERTIFICATE MODAL ═══════════════ */
     function initCertModal() {
-        const modal    = document.getElementById('certModal');
-        const overlay  = document.getElementById('certModalOverlay');
+        const modal = document.getElementById('certModal');
+        const overlay = document.getElementById('certModalOverlay');
         const closeBtn = document.getElementById('certModalClose');
-        const imgEl    = document.getElementById('certModalImg');
-        const titleEl  = document.getElementById('certModalTitle');
-        const linkEl   = document.getElementById('certModalLink');
+        const imgEl = document.getElementById('certModalImg');
+        const titleEl = document.getElementById('certModalTitle');
+        const linkEl = document.getElementById('certModalLink');
 
         // Click on any certificate card → open modal
         document.addEventListener('click', (e) => {
@@ -438,12 +451,12 @@
             if (!card) return;
 
             const imageUrl = card.dataset.url;
-            const name     = card.dataset.name;
+            const name = card.dataset.name;
 
             titleEl.textContent = name || 'Certificate';
-            linkEl.href         = imageUrl || '#';
-            imgEl.src           = imageUrl || '';
-            imgEl.alt           = name || 'Certificate';
+            linkEl.href = imageUrl || '#';
+            imgEl.src = imageUrl || '';
+            imgEl.alt = name || 'Certificate';
 
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -589,6 +602,8 @@
 
     /* ═══════════════ NOT FOUND ═══════════════ */
     function showNotFound() {
+        // Make sure profile container is visible before adding content
+        container.style.display = '';
         const template = document.getElementById('notFoundTemplate');
         const content = template.content.cloneNode(true);
         container.innerHTML = '';

@@ -1,0 +1,329 @@
+/* ═══════════════════════════════════════════════════════════════
+   CASE — World's Greatest Profile Loader  v4.0
+   Canvas-rendered CASE logo · Particle BLAST → SPHERE → EXPAND
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Root loader ─── */
+.case-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: radial-gradient(ellipse at center, #0b1327 0%, #060d1a 60%, #03070f 100%);
+    overflow: hidden;
+}
+
+/* ─── Exit animation ─── */
+.case-loader.case-loader--exit {
+    animation: loaderExit 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes loaderExit {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+
+    30% {
+        opacity: 1;
+        transform: scale(1.06);
+        filter: blur(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.18);
+        filter: blur(20px);
+        pointer-events: none;
+    }
+}
+
+/* ─── Canvas fills everything — all drawing is done on canvas ─── */
+.case-loader__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* ─── Hide HTML nucleus — logo is drawn on canvas ─── */
+.case-loader__nucleus {
+    display: none !important;
+}
+
+.case-loader__orbitals {
+    display: none !important;
+}
+
+.case-loader__nodes {
+    display: none !important;
+}
+
+/* ─── Status typewriter — bottom-centre of screen ─── */
+.case-loader__status {
+    position: absolute;
+    bottom: 96px;
+    /* just above the progress bar */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.case-loader__phrase {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: rgba(148, 163, 184, 0.85);
+    letter-spacing: 0.05em;
+}
+
+.case-loader__cursor {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    color: #3B82F6;
+    animation: blink 1s step-end infinite;
+    line-height: 1;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1
+    }
+
+    50% {
+        opacity: 0
+    }
+}
+
+/* ─── Holographic progress bar ─── */
+.case-loader__bar-wrap {
+    position: absolute;
+    bottom: 52px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    width: min(380px, 80vw);
+    height: 3px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 100px;
+    pointer-events: none;
+}
+
+.case-loader__bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 50%, #06B6D4 100%);
+    background-size: 200% 100%;
+    transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: barShimmer 2.2s linear infinite;
+    position: relative;
+}
+
+@keyframes barShimmer {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+    }
+}
+
+.case-loader__bar::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: -3px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 14px 4px rgba(59, 130, 246, 1), 0 0 28px 8px rgba(139, 92, 246, 0.5);
+}
+
+.case-loader__bar-glow {
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    right: 0;
+    height: 12px;
+    background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+    filter: blur(7px);
+    opacity: 0.35;
+    border-radius: 100px;
+    animation: barGlow 2.4s ease-in-out infinite;
+}
+
+@keyframes barGlow {
+
+    0%,
+    100% {
+        opacity: 0.22
+    }
+
+    50% {
+        opacity: 0.5
+    }
+}
+
+/* ─── HUD corner decorations ─── */
+.case-loader__hud {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: hudFadeIn 1s ease both;
+    pointer-events: none;
+}
+
+@keyframes hudFadeIn {
+    from {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+.case-loader__hud--tl {
+    top: 22px;
+    left: 22px;
+    animation-delay: 0.15s;
+}
+
+.case-loader__hud--tr {
+    top: 22px;
+    right: 22px;
+    animation-delay: 0.25s;
+}
+
+.case-loader__hud--bl {
+    bottom: 22px;
+    left: 22px;
+    animation-delay: 0.35s;
+}
+
+.case-loader__hud--br {
+    bottom: 22px;
+    right: 22px;
+    animation-delay: 0.45s;
+}
+
+.hud-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: rgba(59, 130, 246, 0.65);
+    text-transform: uppercase;
+}
+
+.hud-bracket {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.hud-bracket::before,
+.hud-bracket::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: rgba(59, 130, 246, 0.55);
+    border-style: solid;
+}
+
+.hud-bracket--tl::before {
+    top: 0;
+    left: 0;
+    border-width: 2px 0 0 2px;
+}
+
+.hud-bracket--tl::after {
+    bottom: 0;
+    right: 0;
+    border-width: 0 2px 2px 0;
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
+.hud-bracket--tr::before {
+    top: 0;
+    right: 0;
+    border-width: 2px 2px 0 0;
+}
+
+.hud-bracket--tr::after {
+    bottom: 0;
+    left: 0;
+    border-width: 0 0 2px 2px;
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
+.hud-bracket--bl::before {
+    bottom: 0;
+    left: 0;
+    border-width: 0 0 2px 2px;
+}
+
+.hud-bracket--bl::after {
+    top: 0;
+    right: 0;
+    border-width: 2px 2px 0 0;
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
+.hud-bracket--br::before {
+    bottom: 0;
+    right: 0;
+    border-width: 0 2px 2px 0;
+}
+
+.hud-bracket--br::after {
+    top: 0;
+    left: 0;
+    border-width: 2px 0 0 2px;
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+    .case-loader__bar {
+        animation: none;
+    }
+
+    .case-loader__cursor {
+        animation: none;
+    }
+}
+
+/* ─── Mobile ─── */
+@media (max-width: 520px) {
+
+    .case-loader__hud--tl,
+    .case-loader__hud--tr {
+        display: none;
+    }
+
+    .case-loader__status {
+        bottom: 92px;
+    }
+
+    .case-loader__phrase {
+        font-size: 11px;
+    }
+
+    .case-loader__bar-wrap {
+        width: min(280px, 78vw);
+    }
+}
+
