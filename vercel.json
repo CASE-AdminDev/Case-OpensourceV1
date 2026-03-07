@@ -40,6 +40,15 @@
       ]
     },
     {
+      "source": "/public/js/firebase-env.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
       "source": "/styles.css",
       "headers": [
         {
