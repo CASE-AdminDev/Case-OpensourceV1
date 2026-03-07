@@ -499,11 +499,25 @@ const DataService = (() => {
      * @returns {Promise<Object>} { found, user, projects, certificates }
      */
     async function getPublicProfile(username) {
-        // Lookup uid from username
-        const usernameSnap = await db.collection('usernames').doc(username).get();
-        if (!usernameSnap.exists) return { found: false };
+        // Resolve uid — try username first, then fall back to CASE code lookup
+        let uid = null;
 
-        const uid = usernameSnap.data().uid;
+        const usernameSnap = await db.collection('usernames').doc(username.toLowerCase()).get();
+        if (usernameSnap.exists) {
+            uid = usernameSnap.data().uid;
+        }
+
+        // Fall back to CASE code (e.g. ?u=CASE-AB3XY shared directly)
+        if (!uid) {
+            const code = username.toUpperCase().replace(/\s/g, '');
+            const codeSnap = await db.collection('caseCodes').doc(code).get();
+            if (codeSnap.exists) {
+                uid = codeSnap.data().uid;
+            }
+        }
+
+        if (!uid) return { found: false };
+
         const userSnap = await db.collection('users').doc(uid).get();
         if (!userSnap.exists) return { found: false };
 

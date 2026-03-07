@@ -51,6 +51,7 @@
             renderCertificates(data.certificates);
             renderQualifications(data.qualifications || []);
             renderExperiences(data.experiences || []);
+            renderJourneyMap(data.qualifications || [], data.experiences || []);
 
             // Owner detection (non-blocking)
             detectOwner(data.user.uid);
@@ -118,7 +119,7 @@
         // CASE code badge
         const codeEl = document.getElementById('profileCaseCode');
         if (user.caseCode) {
-            codeEl.textContent = `CASE ${user.caseCode}`;
+            codeEl.textContent = user.caseCode;
         } else {
             codeEl.style.display = 'none';
         }
@@ -309,6 +310,10 @@
 
         grid.innerHTML = projects.map(p => `
             <div class="pub-project-card">
+                ${p.previewUrl ? `
+                <div class="pub-project-card__preview">
+                    <img src="${Utils.escapeHTML(p.previewUrl)}" alt="${Utils.escapeHTML(p.name)}" loading="lazy" />
+                </div>` : ''}
                 <div class="pub-project-card__header">
                     <div class="pub-project-card__icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
@@ -473,10 +478,11 @@
         const delays = [
             ['profileHero', 100],
             ['socialsSection', 300],
-            ['projectsSection', 500],
-            ['certsSection', 700],
-            ['qualsSection', 900],
-            ['expsSection', 1100],
+            ['journeySection', 500],
+            ['projectsSection', 700],
+            ['certsSection', 900],
+            ['qualsSection', 1100],
+            ['expsSection', 1300],
         ];
         delays.forEach(([id, ms]) => {
             setTimeout(() => {
@@ -502,12 +508,83 @@
             { threshold: 0.1 }
         );
 
-        document.querySelectorAll('.pub-project-card, .pub-cert-card, .social-link-card, .pub-qual-card, .pub-exp-card').forEach(card => {
+        document.querySelectorAll('.pub-project-card, .pub-cert-card, .social-link-card, .pub-qual-card, .pub-exp-card, .journey-card').forEach(card => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(16px)';
             card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
             observer.observe(card);
         });
+    }
+
+    /* ═══════════════ CAREER JOURNEY MAP ═══════════════ */
+    function renderJourneyMap(quals, exps) {
+        const section = document.getElementById('journeySection');
+        const map = document.getElementById('journeyMap');
+        const countEl = document.getElementById('journeyCount');
+
+        if ((!quals || quals.length === 0) && (!exps || exps.length === 0)) {
+            section.style.display = 'none';
+            return;
+        }
+
+        // Build unified timeline entries
+        const items = [];
+
+        (quals || []).forEach(q => {
+            const yearStr = extractYear(q.year || '');
+            items.push({
+                type: 'edu',
+                sortYear: yearStr,
+                title: q.degree || 'Degree',
+                subtitle: q.institution || '',
+                meta: [q.year, q.grade].filter(Boolean).join(' · '),
+                icon: '🎓',
+            });
+        });
+
+        (exps || []).forEach(e => {
+            const yearStr = extractYear(e.duration || '');
+            items.push({
+                type: 'work',
+                sortYear: yearStr,
+                title: e.title || 'Role',
+                subtitle: e.company || '',
+                meta: e.duration || '',
+                desc: e.description || '',
+                icon: '💼',
+            });
+        });
+
+        // Sort chronologically (oldest first)
+        items.sort((a, b) => (a.sortYear || 9999) - (b.sortYear || 9999));
+
+        const total = items.length;
+        countEl.textContent = `${total} milestone${total !== 1 ? 's' : ''}`;
+
+        map.innerHTML = items.map((item, idx) => `
+            <div class="journey-node journey-node--${item.type}">
+                <div class="journey-node__dot"></div>
+                <div class="journey-card">
+                    <div class="journey-card__header">
+                        <span class="journey-card__icon">${item.icon}</span>
+                        <span class="journey-card__type-badge journey-card__type-badge--${item.type}">
+                            ${item.type === 'edu' ? 'Education' : 'Experience'}
+                        </span>
+                    </div>
+                    <div class="journey-card__title">${Utils.escapeHTML(item.title)}</div>
+                    <div class="journey-card__subtitle">${Utils.escapeHTML(item.subtitle)}</div>
+                    ${item.meta ? `<div class="journey-card__meta">${Utils.escapeHTML(item.meta)}</div>` : ''}
+                    ${item.desc ? `<div class="journey-card__desc">${Utils.escapeHTML(item.desc)}</div>` : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    /** Extract the earliest 4-digit year from a string like "Jan 2021 - Dec 2023" or "2022" */
+    function extractYear(str) {
+        const matches = (str || '').match(/\b(19|20)\d{2}\b/g);
+        if (!matches) return null;
+        return Math.min(...matches.map(Number));
     }
 
     /* ═══════════════ NOT FOUND ═══════════════ */
