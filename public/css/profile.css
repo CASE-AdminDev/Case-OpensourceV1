@@ -270,6 +270,34 @@
   background: rgba(139, 92, 246, 0.15);
   color: var(--accent-purple);
 }
+.social-link-card__icon--twitter {
+  background: rgba(26, 140, 216, 0.12);
+  color: #1A8CD8;
+}
+.social-link-card__icon--instagram {
+  background: rgba(225, 48, 108, 0.12);
+  color: #E1306C;
+}
+.social-link-card__icon--youtube {
+  background: rgba(255, 0, 0, 0.10);
+  color: #FF0000;
+}
+.social-link-card__icon--leetcode {
+  background: rgba(255, 161, 22, 0.12);
+  color: #FFA116;
+}
+.social-link-card__icon--hackerrank {
+  background: rgba(0, 234, 100, 0.10);
+  color: #00C853;
+}
+.social-link-card__icon--whatsapp {
+  background: rgba(37, 211, 102, 0.12);
+  color: #25D366;
+}
+.social-link-card__icon--telegram {
+  background: rgba(34, 158, 217, 0.12);
+  color: #229ED9;
+}
 
 .social-link-card__info {
   display: flex;

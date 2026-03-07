@@ -52,10 +52,22 @@
                     opDir: 1,
                 });
             }
+            this._running = true;
+            // Pause loop when tab is hidden to save CPU
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden && !this._running) {
+                    this._running = true;
+                    this.animate();
+                }
+            });
             this.animate();
         }
 
         animate() {
+            if (document.hidden) {
+                this._running = false;
+                return;
+            }
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
             for (const p of this.particles) {
@@ -85,6 +97,7 @@
         }
     }
 
+
     // ─── Typewriter Effect ───
     function typeWriter(element, text, speed = 55) {
         return new Promise((resolve) => {
@@ -104,10 +117,17 @@
     }
 
     // ─── Gradient Mesh Hue Shift ───
+    // Throttled to every 4th frame (~15fps) — the gradient is subtle and doesn't
+    // need 60fps updates. This cuts gradient-related style recalculations by 75%.
     function startGradientShift() {
         let hueOffset = 0;
+        let frameCount = 0;
         function shift() {
-            hueOffset += 0.15;
+            requestAnimationFrame(shift);
+            if (document.hidden) return;
+            if (++frameCount % 4 !== 0) return;
+
+            hueOffset += 0.6; // compensate for skipped frames (0.15 * 4)
             const h1 = 217 + Math.sin(hueOffset * 0.01) * 10;
             const h2 = 266 + Math.cos(hueOffset * 0.015) * 12;
 
@@ -119,8 +139,6 @@
         radial-gradient(ellipse 90% 50% at 50% 50%, 
           hsla(${h1}, 90%, 58%, 0.04) 0%, transparent 80%)
       `;
-
-            requestAnimationFrame(shift);
         }
         shift();
     }
@@ -199,30 +217,31 @@
 
     // ─── Entry Animation Sequence ───
     async function runEntrySequence() {
+        const isMobile = window.innerWidth < 768;
         const particles = new ParticleField(DOM.particles);
 
-        // Step 1: 0.0s — Particles fade in
-        particles.init(55);
+        // Step 1: 0.0s — Particles fade in (fewer on mobile to save GPU)
+        particles.init(isMobile ? 25 : 45);
         DOM.particles.classList.add('visible');
 
-        // Step 2: 0.5s — Logo fade in with glow
-        await delay(500);
+        // Step 2: 0.3s — Logo fade in with glow
+        await delay(300);
         DOM.loaderLogo.classList.add('visible');
 
-        // Step 3: 1.0s — Typewriter tagline
-        await delay(500);
-        await typeWriter(DOM.loaderTagline, 'Code. Access. Share. Everywhere.', 60);
+        // Step 3: 0.6s — Typewriter tagline (faster typing)
+        await delay(300);
+        await typeWriter(DOM.loaderTagline, 'Code. Access. Share. Everywhere.', 40);
 
-        // Step 4: 2.0s — Hide loader, show hero content
-        await delay(400);
+        // Step 4: ~1.3s — Hide loader, show hero content
+        await delay(200);
         DOM.loaderOverlay.classList.add('hidden');
 
-        await delay(300);
+        await delay(100);
         DOM.heroContent.classList.add('visible');
         DOM.navbar.classList.add('visible');
 
-        // Step 5: 2.5s — Hero mockup blur-to-clear
-        await delay(500);
+        // Step 5: ~1.6s — Hero mockup blur-to-clear
+        await delay(250);
         DOM.heroMockup.classList.add('visible');
 
         // Restart link-added bar animation
@@ -230,13 +249,13 @@
         void DOM.deployBarFill.offsetWidth; // trigger reflow
         DOM.deployBarFill.style.animation = 'deployBar 2.5s ease-out forwards';
 
-        // Step 6: 3.0s — Gradient mesh begins
-        await delay(500);
+        // Step 6: ~1.85s — Gradient mesh begins
+        await delay(150);
         DOM.gradientMesh.classList.add('visible');
         startGradientShift();
 
-        // Step 7: 3.5s — Full page interactive
-        await delay(500);
+        // Step 7: ~2.0s — Full page interactive
+        await delay(150);
         document.body.style.overflowY = 'auto';
     }
 
