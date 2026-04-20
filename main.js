@@ -20,6 +20,9 @@
         mobileMenuBtn: document.getElementById('mobileMenuBtn'),
         navLinks: document.getElementById('navLinks'),
         scrollIndicator: document.getElementById('scrollIndicator'),
+        themeToggle: document.getElementById('themeToggle'),
+        themeToggleIcon: document.getElementById('themeToggleIcon'),
+        themeToggleText: document.getElementById('themeToggleText'),
     };
 
     // ─── Particle System ───
@@ -69,6 +72,7 @@
                 return;
             }
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            const particleRGB = getComputedStyle(document.documentElement).getPropertyValue('--particle-rgb').trim() || '94, 106, 210';
 
             for (const p of this.particles) {
                 // Move
@@ -89,7 +93,7 @@
                 // Draw
                 this.ctx.beginPath();
                 this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                this.ctx.fillStyle = `rgba(59, 130, 246, ${p.opacity})`;
+                this.ctx.fillStyle = `rgba(${particleRGB}, ${p.opacity})`;
                 this.ctx.fill();
             }
 
@@ -130,17 +134,68 @@
             hueOffset += 0.6; // compensate for skipped frames (0.15 * 4)
             const h1 = 217 + Math.sin(hueOffset * 0.01) * 10;
             const h2 = 266 + Math.cos(hueOffset * 0.015) * 12;
+            const computed = getComputedStyle(document.documentElement);
+            const alpha1 = parseFloat(computed.getPropertyValue('--mesh-alpha-1')) || 0.08;
+            const alpha2 = parseFloat(computed.getPropertyValue('--mesh-alpha-2')) || 0.06;
+            const alpha3 = parseFloat(computed.getPropertyValue('--mesh-alpha-3')) || 0.04;
+            const light1 = parseFloat(computed.getPropertyValue('--mesh-light-1')) || 58;
+            const light2 = parseFloat(computed.getPropertyValue('--mesh-light-2')) || 62;
 
             DOM.gradientMesh.style.background = `
         radial-gradient(ellipse 80% 60% at ${20 + Math.sin(hueOffset * 0.005) * 5}% ${30 + Math.cos(hueOffset * 0.007) * 5}%, 
-          hsla(${h1}, 90%, 58%, 0.08) 0%, transparent 70%),
+          hsla(${h1}, 90%, ${light1}%, ${alpha1}) 0%, transparent 70%),
         radial-gradient(ellipse 60% 80% at ${80 + Math.cos(hueOffset * 0.006) * 5}% ${70 + Math.sin(hueOffset * 0.008) * 5}%, 
-          hsla(${h2}, 70%, 62%, 0.06) 0%, transparent 70%),
+          hsla(${h2}, 70%, ${light2}%, ${alpha2}) 0%, transparent 70%),
         radial-gradient(ellipse 90% 50% at 50% 50%, 
-          hsla(${h1}, 90%, 58%, 0.04) 0%, transparent 80%)
+          hsla(${h1}, 90%, ${light1}%, ${alpha3}) 0%, transparent 80%)
       `;
         }
         shift();
+    }
+
+    // ─── Theme Controls ───
+    const THEME_KEY = 'case-theme';
+
+    function updateThemeControlState(theme) {
+        if (DOM.themeToggleIcon) DOM.themeToggleIcon.textContent = theme === 'dark' ? '☀' : '🌙';
+        if (DOM.themeToggleText) DOM.themeToggleText.textContent = theme === 'dark' ? 'Light' : 'Dark';
+        if (DOM.themeToggle) DOM.themeToggle.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
+
+        document.querySelectorAll('[data-theme-choice]').forEach((button) => {
+            const active = button.dataset.themeChoice === theme;
+            button.classList.toggle('active', active);
+            button.setAttribute('aria-pressed', String(active));
+        });
+    }
+
+    function applyTheme(theme, persist = true) {
+        const finalTheme = theme === 'dark' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', finalTheme);
+        updateThemeControlState(finalTheme);
+
+        const metaTheme = document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) {
+            const color = getComputedStyle(document.documentElement).getPropertyValue('--theme-color').trim();
+            if (color) metaTheme.setAttribute('content', color);
+        }
+
+        if (persist) localStorage.setItem(THEME_KEY, finalTheme);
+    }
+
+    function initTheme() {
+        const storedTheme = localStorage.getItem(THEME_KEY);
+        applyTheme(storedTheme || 'light', false);
+
+        DOM.themeToggle?.addEventListener('click', () => {
+            const nextTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            applyTheme(nextTheme);
+        });
+
+        document.querySelectorAll('[data-theme-choice]').forEach((button) => {
+            button.addEventListener('click', () => {
+                applyTheme(button.dataset.themeChoice || 'light');
+            });
+        });
     }
 
     // ─── Scroll Reveal Observer ───
@@ -315,6 +370,7 @@
     function init() {
         // Prevent scroll during entry
         document.body.style.overflowY = 'hidden';
+        initTheme();
 
         // Start everything
         runEntrySequence();

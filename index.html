@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
   <meta charset="UTF-8" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <meta name="theme-color" content="#0F172A" />
+  <meta name="theme-color" content="#f7f8f8" />
   <link rel="icon" type="image/svg+xml" href="public/logo/favicon.svg" />
 
   <!-- Fonts -->
@@ -68,14 +68,21 @@
         </span>
         CASE
       </a>
-      <div class="nav-links" id="navLinks">
-        <a href="#features" class="nav-link">Features</a>
-        <a href="#how-it-works" class="nav-link">How It Works</a>
-        <a href="/public/explore.html" class="nav-link">Explore</a>
-        <a href="/public/auth.html" class="btn-primary btn-nav" id="navCta">
-          Get Started
-          <span class="btn-arrow">→</span>
-        </a>
+      <div class="nav-actions">
+        <div class="nav-links" id="navLinks">
+          <a href="#features" class="nav-link">Features</a>
+          <a href="#how-it-works" class="nav-link">How It Works</a>
+          <a href="#settings" class="nav-link">Settings</a>
+          <a href="/public/explore.html" class="nav-link">Explore</a>
+          <a href="/public/auth.html" class="btn-primary btn-nav" id="navCta">
+            Get Started
+            <span class="btn-arrow">→</span>
+          </a>
+        </div>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode">
+          <span class="theme-toggle__icon" id="themeToggleIcon">🌙</span>
+          <span class="theme-toggle__text" id="themeToggleText">Dark</span>
+        </button>
       </div>
       <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -316,6 +323,27 @@
           </div>
           <h3>Share Your CASE</h3>
           <p>Get a unique CASE code and professional profile link to share anywhere.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ THEME SETTINGS SECTION ═══════════════ -->
+  <section class="theme-settings reveal" id="settings">
+    <div class="section-inner">
+      <div class="theme-settings-card glass-panel">
+        <div>
+          <span class="section-label">Settings</span>
+          <h2>Theme <span class="accent">Preference</span></h2>
+          <p class="section-subheading">Choose your preferred mode. Default is light mode.</p>
+        </div>
+        <div class="theme-options" role="radiogroup" aria-label="Theme preference">
+          <button class="theme-option active" type="button" data-theme-choice="light" aria-pressed="true">
+            <span class="theme-option__icon">☀️</span> Light
+          </button>
+          <button class="theme-option" type="button" data-theme-choice="dark" aria-pressed="false">
+            <span class="theme-option__icon">🌙</span> Dark
+          </button>
         </div>
       </div>
     </div>
