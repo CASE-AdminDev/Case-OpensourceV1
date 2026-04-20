@@ -1,26 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About — CASE</title>
   <meta name="description" content="Learn about CASE — the easiest way for students to showcase and share their portfolios." />
-  <meta name="theme-color" content="#0F172A" />
+  <meta name="theme-color" content="#f7f8f8" />
   <link rel="icon" type="image/svg+xml" href="logo/favicon.svg" />
 
   <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </noscript>
 
   <link rel="stylesheet" href="css/shared.css" />
   <link rel="stylesheet" href="css/pages.css" />
+  <script src="js/theme.js" defer></script>
 </head>
 
 <body>
@@ -32,6 +33,7 @@
         <a href="/" class="page-topbar__logo"><img src="logo/logo.svg" alt="CASE" height="28" /></a>
         <nav class="page-topbar__nav">
           <a href="/public/explore.html" class="page-topbar__link">Explore</a>
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch theme"></button>
           <a href="/public/auth.html" class="page-topbar__cta">Get Started →</a>
         </nav>
       </div>

@@ -269,12 +269,14 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 }
 
 .nav-actions {
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-left: auto;
 }
 
 /* ─── Nav Logo Icon ─── */
@@ -974,6 +976,7 @@ body.menu-open {
   align-items: center;
   justify-content: center;
   -webkit-tap-highlight-color: transparent;
+  margin-left: 4px;
 }
 .mobile-menu-btn span {
   display: block;

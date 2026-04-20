@@ -111,7 +111,7 @@
 .auth__input {
   width: 100%;
   padding: 14px 16px;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--surface-inline);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-btn);
   color: var(--text-primary);
@@ -196,8 +196,8 @@
   gap: 8px;
 }
 .auth__btn:hover {
-  background: #2563EB;
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.35);
+  background: var(--accent-hover);
+  box-shadow: 0 0 20px rgba(94, 106, 210, 0.35);
   transform: translateY(-1px);
 }
 .auth__btn:active {
@@ -215,7 +215,7 @@
   color: var(--text-primary);
 }
 .auth__btn--secondary:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--surface-inline);
   box-shadow: none;
   border-color: var(--accent-blue);
 }
@@ -282,8 +282,8 @@
 .auth__btn .spinner {
   width: 18px;
   height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
+  border: 2px solid var(--border-subtle);
+  border-top-color: var(--accent-blue);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }

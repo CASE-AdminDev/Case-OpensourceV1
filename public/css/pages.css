@@ -6,10 +6,10 @@
 /* ─── Atmosphere ─── */
 body {
   background:
-    radial-gradient(1200px 520px at 12% -8%, rgba(59, 130, 246, 0.18), transparent 62%),
-    radial-gradient(980px 460px at 95% 4%, rgba(14, 165, 233, 0.14), transparent 58%),
-    radial-gradient(860px 420px at 50% 105%, rgba(16, 185, 129, 0.1), transparent 60%),
-    linear-gradient(180deg, #0b1222 0%, #0f172a 38%, #111d33 100%);
+    radial-gradient(1200px 520px at 12% -8%, rgba(94, 106, 210, 0.18), transparent 62%),
+    radial-gradient(980px 460px at 95% 4%, rgba(113, 112, 255, 0.14), transparent 58%),
+    radial-gradient(860px 420px at 50% 105%, rgba(94, 106, 210, 0.1), transparent 60%),
+    var(--bg-primary);
 }
 
 .page {
@@ -49,11 +49,11 @@ body {
   width: 100%;
   z-index: 100;
   padding: var(--space-2) var(--space-3);
-  background: rgba(8, 15, 32, 0.76);
+  background: var(--bg-nav-scrolled);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
-  box-shadow: 0 10px 40px rgba(2, 8, 23, 0.45);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 10px 30px rgba(15, 16, 17, 0.12);
 }
 
 .page-topbar__inner {
@@ -79,7 +79,7 @@ body {
 .page-topbar__nav {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .page-topbar__link {
@@ -101,7 +101,7 @@ body {
   gap: 6px;
   padding: 8px 18px;
   border-radius: var(--radius-btn);
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 55%, #0ea5e9 100%);
+  background: var(--accent-blue);
   color: #fff;
   font-size: 14px;
   font-weight: 600;
@@ -111,7 +111,7 @@ body {
 
 .page-topbar__cta:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(56, 189, 248, 0.34);
+  box-shadow: 0 12px 30px rgba(94, 106, 210, 0.3);
 }
 
 /* ─── Page Container ─── */
@@ -179,7 +179,7 @@ body {
 
 .page__divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(125, 211, 252, 0.28), transparent);
+  background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
   margin: var(--space-6) 0;
 }
 
@@ -210,7 +210,7 @@ body {
 }
 
 .page-section__text a:hover {
-  color: #60A5FA;
+  color: var(--accent-hover);
 }
 
 .page-section__list {
@@ -248,8 +248,8 @@ body {
 }
 
 .team-card {
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.82), rgba(15, 23, 42, 0.94));
-  border: 1px solid rgba(125, 211, 252, 0.18);
+  background: var(--surface-glass);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   padding: var(--space-3);
   text-align: center;
@@ -259,8 +259,8 @@ body {
 
 .team-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(56, 189, 248, 0.42);
-  box-shadow: 0 16px 44px rgba(14, 116, 144, 0.22);
+  border-color: rgba(94, 106, 210, 0.36);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .team-card__avatar {
@@ -299,8 +299,8 @@ body {
 }
 
 .blog-card {
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.86), rgba(15, 23, 42, 0.95));
-  border: 1px solid rgba(125, 211, 252, 0.18);
+  background: var(--surface-glass);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   padding: var(--space-3);
   transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
@@ -308,8 +308,8 @@ body {
 }
 
 .blog-card:hover {
-  border-color: rgba(56, 189, 248, 0.4);
-  box-shadow: 0 18px 44px rgba(14, 116, 144, 0.2);
+  border-color: rgba(94, 106, 210, 0.36);
+  box-shadow: var(--shadow-card-hover);
   transform: translateY(-3px);
 }
 
@@ -354,8 +354,8 @@ body {
 }
 
 .role-card {
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.84), rgba(15, 23, 42, 0.95));
-  border: 1px solid rgba(125, 211, 252, 0.18);
+  background: var(--surface-glass);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   padding: var(--space-3);
   display: flex;
@@ -367,8 +367,8 @@ body {
 
 .role-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(56, 189, 248, 0.4);
-  box-shadow: 0 14px 36px rgba(14, 116, 144, 0.22);
+  border-color: rgba(94, 106, 210, 0.36);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .role-card__info {
@@ -392,7 +392,7 @@ body {
 .role-card__tag {
   font-size: 13px;
   color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--surface-inline);
   padding: 3px 10px;
   border-radius: var(--radius-pill);
 }
@@ -417,8 +417,8 @@ body {
 }
 
 .value-card {
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.86), rgba(15, 23, 42, 0.95));
-  border: 1px solid rgba(125, 211, 252, 0.18);
+  background: var(--surface-glass);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-card);
   padding: var(--space-3);
   transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
@@ -427,8 +427,8 @@ body {
 
 .value-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(56, 189, 248, 0.4);
-  box-shadow: 0 14px 36px rgba(14, 116, 144, 0.2);
+  border-color: rgba(94, 106, 210, 0.36);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .value-card__icon {
@@ -461,7 +461,7 @@ body {
 .page-footer {
   border-top: 1px solid var(--border-subtle);
   padding: var(--space-6) var(--space-3) var(--space-4);
-  background: linear-gradient(180deg, rgba(8, 15, 32, 0.55), rgba(8, 15, 32, 0.9));
+  background: var(--bg-card-muted);
 }
 
 .page-footer__inner {
@@ -551,8 +551,8 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--surface-inline);
+  border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -562,8 +562,8 @@ body {
 
 .page-footer__social-link:hover {
   color: var(--accent-blue);
-  border-color: rgba(59, 130, 246, 0.3);
-  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(94, 106, 210, 0.3);
+  background: rgba(94, 106, 210, 0.12);
   transform: translateY(-1px);
 }
 
@@ -594,6 +594,9 @@ body {
 @media (max-width: 768px) {
   .page-topbar__nav {
     gap: var(--space-2);
+  }
+  .page-topbar {
+    padding: 10px var(--space-2);
   }
   .page-topbar__link {
     display: none;
