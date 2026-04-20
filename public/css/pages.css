@@ -65,11 +65,18 @@ body {
 }
 
 .page-topbar__logo {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
   font-family: var(--font-heading);
   font-size: 22px;
   font-weight: 800;
   color: var(--text-primary);
   letter-spacing: -0.5px;
+}
+
+.page-topbar__logo img {
+  display: block;
 }
 
 .page-topbar__logo .logo-a {
